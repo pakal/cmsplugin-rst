@@ -16,3 +16,4 @@ class RstPluginForm(forms.ModelForm):
     
     class Meta:
         model = RstPluginModel
+        fields = ["name", "body"]
