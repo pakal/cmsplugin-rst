@@ -25,10 +25,10 @@ consider using the cache framework of django.
 Configuration
 ***************
 
-The behaviour of cmrplugin_rst can be tweaked with these Django settings (all are optional).
+The behaviour of cmsplugin_rst can be tweaked with these Django settings (all are optional).
 
 **The plugin disallows, by default, insecure features like *file insertions* 
-and *raw* directive, in the restructured text.**
+and *raw* directive, in the restructured text renderer.**
 
 
 CMSPLUGIN_RST_WRITER_NAME
