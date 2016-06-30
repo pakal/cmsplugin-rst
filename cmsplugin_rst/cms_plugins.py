@@ -21,7 +21,7 @@ def restructuredtext(value):
         return force_text(value)
     else:
         docutils_settings = get_cfg("SETTINGS_OVERRIDES", {})
-        parts = publish_parts(source=force_bytes(value), writer_name="html4css1", settings_overrides=docutils_settings)
+        parts = publish_parts(source=force_bytes(value), writer_name=get_cfg("WRITER_NAME", "html4css1"), settings_overrides=docutils_settings)
         return mark_safe(force_text(parts["html_body"]))
 
 

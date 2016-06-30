@@ -6,6 +6,8 @@ INSTALLED_APPS += ("cmsplugin_rst",)
 
 ## DJANGO CMSPLUGIN RST CONF ##
 
+CMSPLUGIN_RST_WRITER_NAME = "html4css1"
+
 CMSPLUGIN_RST_CONTENT_PREFIX = """
 
 .. |nbsp| unicode:: 0xA0 
