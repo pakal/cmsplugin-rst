@@ -2,10 +2,10 @@
 cmsplugin_rst
 #############
 
-*Forked from https://github.com/ojii/cmsplugin-rst*
+*Forked and improved from https://github.com/ojii/cmsplugin-rst*
 
-A plugin for `Django CMS`_ which renders restructured text.
-By default, it uses 
+A plugin for `Django CMS`_ which renders restructured text into html.
+
 
 ************
 Installation
@@ -17,12 +17,19 @@ Install ``cmsplugin_rst`` using pip or your favorite method, using a virtualenv 
 
 Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS`` in your Django settings.
 
-To speed up the rendering of cmsplugin_rst plugins, consider using the cache framework of django.
+To speed up the (potentially heavy) rendering of cmsplugin_rst plugins, 
+consider using the cache framework of django.
 
 
 ***************
 Configuration
 ***************
+
+The behaviour of cmrplugin_rst can be tweaked with these Django settings (all are optional).
+
+**The plugin disallows, by default, insecure features like *file insertions* 
+and *raw* directive, in the restructured text.**
+
 
 CMSPLUGIN_RST_WRITER_NAME
     Name of the docutils writer to be used for rendering HTML (default: "html4css1")
@@ -45,6 +52,22 @@ CMSPLUGIN_RST_POSTPROCESSORS
     It must be a list of qualified function names, eg. ["mymodule.mysubmodule.myfunction"].
     Each of these functions must expect a beautifulsoup tree as unique argument, 
     and modify it in-place.
+
     
-    
-DjangoCMS: http://docs.django-cms.org/
+**********************
+Special Replacements
+**********************
+
+The restructured text is not evaluated by the django template engine, 
+so you can't use django tags and filters.
+
+But some specific replacements take place:
+
+- {{ MEDIA_URL }} and {{ STATIC_URL }} tags are replaced, *before* html rendering, 
+  by corresponding django settings.
+- {{ BR }} and {{ NBSP }} are replaced, *after* html rendering, by corresponding html
+  tags/entities.
+
+
+  
+.. _Django CMS: https://www.django-cms.org
