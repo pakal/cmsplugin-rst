@@ -1,0 +1,4 @@
+[submodule "tests/test_project"]
+	path = tests/test_project
+	url = git@github.com:pakal/django-cms-plugin-tester.git
+	branch = master
