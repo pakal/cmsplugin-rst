@@ -9,6 +9,7 @@ if __name__ == "__main__":
     sys.path.extend([REPO_ROOT, 
                      os.path.join(THIS_DIR, "test_project")])
 
+    os.environ.setdefault("DJANGO_TEST_DB_PATH", os.path.join(THIS_DIR, "testdb.sqlite"))
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_settings")
 
     from django.core.management import execute_from_command_line
