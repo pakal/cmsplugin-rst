@@ -15,7 +15,17 @@ Install ``cmsplugin_rst`` using pip or your favorite method, using a virtualenv 
 
     $ pip install cmsplugin_rst
 
-Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS`` in your Django settings.
+Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS``, in your django settings.
+
+And then migrate the DB:
+
+    $ python manage.py migrate
+    
+Beware, if you upgrade from **cmsplugin_rst v0.1.1**, which didn't use django migrations, 
+you may have to skip the initial migration (eg. if you get the 
+"OperationalError: table "cmsplugin_rst_rstpluginmodel" already exists" error):
+
+    $ python manage.py migrate --fake-initial cmsplugin_rst
 
 To speed up the (potentially heavy) rendering of cmsplugin_rst plugins, 
 consider using the cache framework of django.
