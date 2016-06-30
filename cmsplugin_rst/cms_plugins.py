@@ -52,6 +52,7 @@ class RstPlugin(CMSPluginBase):
         rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
         content = restructuredtext(rst)
         content = content.replace("{{ BR }}", "<br/>")
+        content = content.replace("{{ NBSP }}", "&nbsp;")
         context.update({'content': mark_safe(postprocess(content))})
         return context
 
