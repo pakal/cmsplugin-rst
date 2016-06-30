@@ -25,7 +25,7 @@ DOCUTILS_RENDERER_SETTINGS = {
 DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 
 
-def restructuredtext(value):
+def restructuredtext(value, header_level=None):
     try:
         from docutils.core import publish_parts
     except ImportError:
@@ -33,8 +33,12 @@ def restructuredtext(value):
             raise template.TemplateSyntaxError("Error in 'restructuredtext' filter: The Python docutils library isn't installed.")
         return force_text(value)
     else:
-        settings_overrides = DOCUTILS_RENDERER_SETTINGS
-        parts = publish_parts(source=force_bytes(value), writer_name=get_cfg("WRITER_NAME", "html4css1"), settings_overrides=settings_overrides)
+        settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
+        if header_level:  # starts from 1
+            settings_overrides["initial_header_level"] = header_level
+        parts = publish_parts(source=force_bytes(value), 
+                              writer_name=get_cfg("WRITER_NAME", "html4css1"), 
+                              settings_overrides=settings_overrides)
         return force_text(parts["html_body"])
 
 
@@ -50,7 +54,7 @@ class RstPlugin(CMSPluginBase):
         rst += "\n" + get_cfg("CONTENT_SUFFIX", "") 
         rst = rst.replace("{{ MEDIA_URL }}", settings.MEDIA_URL)
         rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
-        content = restructuredtext(rst)
+        content = restructuredtext(rst, header_level=instance.header_level)
         content = content.replace("{{ BR }}", "<br/>")
         content = content.replace("{{ NBSP }}", "&nbsp;")
         context.update({'content': mark_safe(postprocess(content))})
