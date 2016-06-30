@@ -21,7 +21,7 @@ def restructuredtext(value):
     else:
         docutils_settings = getattr(settings, "RESTRUCTUREDTEXT_FILTER_SETTINGS", {})
         parts = publish_parts(source=force_bytes(value), writer_name="html4css1", settings_overrides=docutils_settings)
-        return mark_safe(force_text(parts["fragment"]))
+        return mark_safe(force_text(parts["html_body"]))
 
 
 class RstPlugin(CMSPluginBase):
