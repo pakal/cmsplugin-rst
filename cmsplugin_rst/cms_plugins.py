@@ -12,6 +12,19 @@ from django import template
 
 from .utils import get_cfg
 
+
+DOCUTILS_RENDERER_SETTINGS = {
+    "initial_header_level": 1,
+    # important, to have even lone titles stay in the html fragment:
+    "doctitle_xform": False, 
+    # we also disable the promotion of lone subsection title to a subtitle:
+    "sectsubtitle_xform": False, 
+    'file_insertion_enabled': False,  # SECURITY MEASURE (file hacking)
+    'raw_enabled': False, # SECURITY MEASURE (script tag)
+}
+DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
+
+
 def restructuredtext(value):
     try:
         from docutils.core import publish_parts
@@ -20,9 +33,9 @@ def restructuredtext(value):
             raise template.TemplateSyntaxError("Error in 'restructuredtext' filter: The Python docutils library isn't installed.")
         return force_text(value)
     else:
-        docutils_settings = get_cfg("SETTINGS_OVERRIDES", {})
-        parts = publish_parts(source=force_bytes(value), writer_name=get_cfg("WRITER_NAME", "html4css1"), settings_overrides=docutils_settings)
-        return mark_safe(force_text(parts["html_body"]))
+        settings_overrides = DOCUTILS_RENDERER_SETTINGS
+        parts = publish_parts(source=force_bytes(value), writer_name=get_cfg("WRITER_NAME", "html4css1"), settings_overrides=settings_overrides)
+        return force_text(parts["html_body"])
 
 
 class RstPlugin(CMSPluginBase):
@@ -39,7 +52,7 @@ class RstPlugin(CMSPluginBase):
         rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
         content = restructuredtext(rst)
         content = content.replace("{{ BR }}", "<br/>")
-        context.update({'content': postprocess(content)})
+        context.update({'content': mark_safe(postprocess(content))})
         return context
 
 plugin_pool.register_plugin(RstPlugin)

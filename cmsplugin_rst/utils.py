@@ -28,5 +28,5 @@ def postprocess(html):
             soup = BeautifulSoup(html)
             for postprocessor in postprocessors:
                 postprocessor(soup)
-            return mark_safe(soup.prettify())
+            return soup.prettify()
     return html
