@@ -3,12 +3,14 @@ try:
 except ImportError:
     BeautifulSoup = None
 from django.conf import settings
-from django.utils.importlib import import_module
+from importlib import import_module
 from django.utils.safestring import mark_safe
+
 
 def get_cfg(key):
     return getattr(settings, 'CMSPLUGIN_RST_%s' % key, [])
 
+    
 def get_postprocessors():
     for postprocessor in get_cfg("POSTPROCESSORS"):
         module_name, callable_name = postprocessor.rsplit('.', 1)
