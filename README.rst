@@ -2,9 +2,7 @@
 cmsplugin_rst
 #############
 
-*Forked and improved from https://github.com/ojii/cmsplugin-rst*
-
-A plugin for `Django CMS`_ which renders restructured text into html.
+A plugin for `Django CMS`_, which renders restructured text into html.
 
 
 ************
