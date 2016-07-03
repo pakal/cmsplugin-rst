@@ -51,8 +51,8 @@ CMSPLUGIN_RST_CONTENT_SUFFIX
 
 CMSPLUGIN_RST_SETTINGS_OVERRIDES
     A dict of settings which will be merged over plugin defaults, and passed to the docutils renderer. 
-    See docutils ``publish_parts()`` and its ``settings_overrides`` parameter : 
-    http://docutils.sourceforge.net/docs/user/config.html#html4css1-writer
+    See docutils ``publish_parts()`` and its ``settings_overrides`` parameter (http://docutils.sourceforge.net/docs/user/config.html#html4css1-writer).
+    Amongst interesting settings are "initial_header_level" and "report_level".
 
 CMSPLUGIN_RST_POSTPROCESSORS
     If and only if ``BeautifulSoup`` is installed, these postprocessors are applied 
@@ -85,6 +85,8 @@ that you'll have set previously in advanced page parameters:
    :cmspage:`My-Reverse-Id`   // the menu title will be use as the link name
    
    :cmspage:`My Link Name <My-Reverse-Id>`   // here the link name is embedded in role
+
+Reverse IDs must exist and be unique in the djangocms DB, else the rendering of the link fails.
 
    
 *************

@@ -21,6 +21,7 @@ DOCUTILS_RENDERER_SETTINGS = {
     "sectsubtitle_xform": False, 
     'file_insertion_enabled': False,  # SECURITY MEASURE (file hacking)
     'raw_enabled': False, # SECURITY MEASURE (script tag)
+    'report_level': 2,  # report warnings and above, by default
 }
 DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 
