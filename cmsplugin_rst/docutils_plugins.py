@@ -31,10 +31,17 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
         reverse_id = text
 
     try:
-        page_lookup = {'reverse_id': reverse_id}
+        # beware: draft and published versions of a page may have the same reverse-ID...
+        page_lookup = {'reverse_id': reverse_id,
+                       'publisher_is_draft': False}  
         page = Page.objects.all().get(**page_lookup)
     except Page.DoesNotExist:
-        msg = inliner.reporter.error("Targeted page doesn't exist: %r" % reverse_id, line=lineno)
+        msg = inliner.reporter.error("Targeted reverse page ID doesn't exist: %r" % reverse_id, line=lineno)
+        prb = inliner.problematic(rawtext, rawtext, msg)
+        return [prb], [msg]
+    except Page.MultipleObjectsReturned:
+        print("MultipleObjectsReturned", reverse_id)
+        msg = inliner.reporter.error("Targeted reverse page ID is not unique: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
     else:
@@ -45,5 +52,6 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
         node = nodes.reference(rawtext, name, refuri=ref,
                                **options)
         return [node], []
+    assert False, "djangocms_link_role buggi implementation"
 
 register_local_role("cmspage", djangocms_link_role)
