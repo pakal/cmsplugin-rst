@@ -36,12 +36,12 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
                        'publisher_is_draft': False}  
         page = Page.objects.all().get(**page_lookup)
     except Page.DoesNotExist:
-        msg = inliner.reporter.error("Targeted reverse page ID doesn't exist: %r" % reverse_id, line=lineno)
+        msg = inliner.reporter.error("Targeted reverse ID of published page doesn't exist: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
     except Page.MultipleObjectsReturned:
         print("MultipleObjectsReturned", reverse_id)
-        msg = inliner.reporter.error("Targeted reverse page ID is not unique: %r" % reverse_id, line=lineno)
+        msg = inliner.reporter.error("Targeted reverse ID of published page is not unique: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
     else:
