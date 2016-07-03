@@ -82,11 +82,19 @@ that you'll have set previously in advanced page parameters:
 
 ::
 
-   :cmspage:`My-Reverse-Id`)   // the menu title will be use as the link name
+   :cmspage:`My-Reverse-Id`   // the menu title will be use as the link name
    
    :cmspage:`My Link Name <My-Reverse-Id>`   // here the link name is embedded in role
 
+   
+*************
+Test Project
+*************
+
+A demo project with a sqlite DB is included in repository, 
+as a git submodule (https://git-scm.com/docs/git-submodule).
+
+Its django admin credentials are test/test.
 
 
-  
 .. _Django CMS: https://www.django-cms.org
