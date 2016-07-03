@@ -19,7 +19,8 @@ And then migrate the DB:
 
     $ python manage.py migrate
     
-Beware, if you upgrade from **cmsplugin_rst v0.1.1**, which didn't use django migrations, 
+Beware, if you upgrade from **cmsplugin_rst v0.1.1**, 
+which didn't use django migrations but South, 
 you may have to skip the initial migration (eg. if you get the 
 "OperationalError: table "cmsplugin_rst_rstpluginmodel" already exists" error):
 

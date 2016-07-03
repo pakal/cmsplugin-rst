@@ -1,0 +1,23 @@
+
+version 0.2
+=================
+
+* Add "cmspage" docutils role to get the URL of a djangocms page
+* Add "header_level" field in model, to override initial 
+  header level for a specific instance
+* add default settings for docutils renderer
+* add auto replacements for static/media urls, and nbsp/br html elements
+* add configuration variables CMSPLUGIN_RST_WRITER_NAME, CMSPLUGIN_RST_CONTENT_PREFIX,
+  CMSPLUGIN_RST_CONTENT_SUFFIX, CMSPLUGIN_RST_SETTINGS_OVERRIDES
+* fix the case of lone titles/subtitles being removed from output
+* switch from South to Django migrations
+* add a test project with its sqlite db
+* update cms plugin for django 1.8 and djangocms 3.2
+
+
+Version 0.1.1
+=================
+
+* support for beautifulsoup postprocessors (CMSPLUGIN_RST_POSTPROCESSORS)
+* support for django 1.2 and djangocms 2.1, using South migrations
+* initial plugin, with name and RST body
