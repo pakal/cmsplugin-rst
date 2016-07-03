@@ -2,7 +2,7 @@
 cmsplugin_rst
 #############
 
-A plugin for `Django CMS`_, which renders restructured text into html.
+A plugin for `Django CMS`_, which renders restructured text into html, using docutils.
 
 
 ************
@@ -62,12 +62,12 @@ CMSPLUGIN_RST_POSTPROCESSORS
     and modify it in-place.
 
     
-**********************
-Special Replacements
-**********************
+***********************************
+Specific Roles and Replacements
+***********************************
 
 The restructured text is not evaluated by the django template engine, 
-so you can't use django tags and filters.
+so you can't use django/djangocms tags and filters.
 
 But some specific replacements take place:
 
@@ -75,6 +75,17 @@ But some specific replacements take place:
   by corresponding django settings.
 - {{ BR }} and {{ NBSP }} are replaced, *after* html rendering, by corresponding html
   tags/entities.
+
+Additionally, you can create links to other CMS pages with 
+the custom "cmspage" role provided, using the "reverse IDs" 
+that you'll have set previously in advanced page parameters:
+
+::
+
+   :cmspage:`My-Reverse-Id`)   // the menu title will be use as the link name
+   
+   :cmspage:`My Link Name <My-Reverse-Id>`   // here the link name is embedded in role
+
 
 
   
