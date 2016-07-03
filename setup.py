@@ -5,10 +5,10 @@ version = __import__('cmsplugin_rst').__version__
 setup(
     name = 'cmsplugin-rst',
     version = version,
-    description = 'Restructured Text plugin for the django CMS.',
-    author = 'Jonas Obrist',
-    author_email = 'jonas.obrist@divio.ch',
-    url = 'http://github.com/ojii/cmsplugin-rst',
+    description = 'Restructured Text plugin for Django CMS.',
+    author = 'Pascal Chambon',
+    author_email = 'pythoniks@gmail.com',
+    url = 'https://github.com/pakal/cmsplugin-rst',
     packages = find_packages(),
     zip_safe=False,
     install_requires=[
