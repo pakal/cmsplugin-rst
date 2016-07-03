@@ -9,6 +9,8 @@ setup(
     author = 'Pascal Chambon',
     author_email = 'pythoniks@gmail.com',
     url = 'https://github.com/pakal/cmsplugin-rst',
+    license="https://opensource.org/licenses/BSD-3-Clause",
+    platforms=["any"],
     packages = find_packages(),
     zip_safe=False,
     install_requires=[
