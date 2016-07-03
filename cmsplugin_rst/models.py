@@ -2,6 +2,9 @@
 from cms.models.pluginmodel import CMSPlugin
 from django.db import models
 
+from . import docutils_plugins  # we register custom docutils directives/roles/...
+
+
 rst_help_text = '<a target="_blank" href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html">Restructuredtext Reference</a>'
 
 
