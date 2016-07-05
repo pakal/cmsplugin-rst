@@ -7,7 +7,7 @@ class RstPluginForm(forms.ModelForm):
 
     body = forms.CharField(
                 widget=forms.Textarea(attrs={
-                    'rows':30,
+                    'rows':20,
                     'cols':80,
                     'style':'font-family:monospace'
                 }),
