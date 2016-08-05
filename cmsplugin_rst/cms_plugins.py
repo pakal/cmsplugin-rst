@@ -10,7 +10,7 @@ from django.utils.encoding import force_text, force_bytes
 from django.utils.safestring import mark_safe
 from django import template
 
-from .utils import get_cfg
+from .utils import get_cfg, french_insecable
 
 
 DOCUTILS_RENDERER_SETTINGS = {
@@ -58,6 +58,9 @@ class RstPlugin(CMSPluginBase):
         content = restructuredtext(rst, header_level=instance.header_level)
         content = content.replace("{{ BR }}", "<br/>")
         content = content.replace("{{ NBSP }}", "&nbsp;")
+        lang = context.get("lang", "").lower()  # should be the cms page language
+        if lang.startswith("fr"):  # ONLY french codes should start like that
+            content = french_insecable(content)
         context.update({'content': mark_safe(postprocess(content))})
         return context
 
