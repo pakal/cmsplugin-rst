@@ -43,6 +43,21 @@ def restructuredtext(value, header_level=None):
         return force_text(parts["html_body"])
 
 
+def render_rich_text(rst_string, language_code="", header_level=None):
+    rst = get_cfg("CONTENT_PREFIX", "") + "\n"
+    rst += rst_string
+    rst += "\n" + get_cfg("CONTENT_SUFFIX", "") 
+    rst = rst.replace("{{ MEDIA_URL }}", settings.MEDIA_URL)
+    rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
+    content = restructuredtext(rst, header_level=header_level)
+    content = content.replace("{{ BR }}", "<br/>")
+    content = content.replace("{{ NBSP }}", "&nbsp;")
+    if language_code.lower().startswith("fr"):  # ONLY french codes should start like that
+        content = french_insecable(content)
+    content = postprocess(content)
+    return content
+
+
 class RstPlugin(CMSPluginBase):
     name = _('Restructured Text Plugin')
     render_template = 'cms/content.html'
@@ -50,18 +65,12 @@ class RstPlugin(CMSPluginBase):
     form = RstPluginForm
 
     def render(self, context, instance, placeholder):
-        rst = get_cfg("CONTENT_PREFIX", "") + "\n"
-        rst += instance.body
-        rst += "\n" + get_cfg("CONTENT_SUFFIX", "") 
-        rst = rst.replace("{{ MEDIA_URL }}", settings.MEDIA_URL)
-        rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
-        content = restructuredtext(rst, header_level=instance.header_level)
-        content = content.replace("{{ BR }}", "<br/>")
-        content = content.replace("{{ NBSP }}", "&nbsp;")
-        lang = context.get("lang", "").lower()  # should be the cms page language
-        if lang.startswith("fr"):  # ONLY french codes should start like that
-            content = french_insecable(content)
-        context.update({'content': mark_safe(postprocess(content))})
+        # we lookup cms page language, else i18n language
+        language_code = context.get("lang", "") or context.get("LANGUAGE_CODE", "")
+        content = render_rich_text(instance.body, 
+                                   language_code=language_code, 
+                                   header_level=instance.header_level)
+        context.update({'content': mark_safe(content)})
         return context
 
 plugin_pool.register_plugin(RstPlugin)
