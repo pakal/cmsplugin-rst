@@ -26,7 +26,7 @@ DOCUTILS_RENDERER_SETTINGS = {
 DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 
 
-def restructuredtext(value, header_level=None):
+def restructuredtext(value, header_level=None, report_level=None):
     try:
         from docutils.core import publish_parts
     except ImportError:
@@ -35,21 +35,23 @@ def restructuredtext(value, header_level=None):
         return force_text(value)
     else:
         settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
-        if header_level:  # starts from 1
+        if header_level is not None:  # starts from 1
             settings_overrides["initial_header_level"] = header_level
+        if report_level is not None:  # starts from 1 too
+            settings_overrides["report_level"] = report_level
         parts = publish_parts(source=force_bytes(value), 
                               writer_name=get_cfg("WRITER_NAME", "html4css1"), 
                               settings_overrides=settings_overrides)
         return force_text(parts["html_body"])
 
 
-def render_rich_text(rst_string, language_code="", header_level=None):
+def render_rich_text(rst_string, language_code="", header_level=None, report_level=None):
     rst = get_cfg("CONTENT_PREFIX", "") + "\n"
     rst += rst_string
     rst += "\n" + get_cfg("CONTENT_SUFFIX", "") 
     rst = rst.replace("{{ MEDIA_URL }}", settings.MEDIA_URL)
     rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
-    content = restructuredtext(rst, header_level=header_level)
+    content = restructuredtext(rst, header_level=header_level, report_level=report_level)
     content = content.replace("{{ BR }}", "<br/>")
     content = content.replace("{{ NBSP }}", "&nbsp;")
     if language_code.lower().startswith("fr"):  # ONLY french codes should start like that
@@ -69,7 +71,8 @@ class RstPlugin(CMSPluginBase):
         language_code = context.get("lang", "") or context.get("LANGUAGE_CODE", "")
         content = render_rich_text(instance.body, 
                                    language_code=language_code, 
-                                   header_level=instance.header_level)
+                                   header_level=instance.header_level,
+                                   report_level=None)  # not set ATM
         context.update({'content': mark_safe(content)})
         return context
 
