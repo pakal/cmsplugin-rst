@@ -31,7 +31,7 @@ def postprocess(html):
             soup = BeautifulSoup(html)
             for postprocessor in postprocessors:
                 postprocessor(soup)
-            return unicode(soup)  # NO prettify(), breaks spacing of tags
+            return str(soup)  # NO prettify(), breaks spacing of tags
     return html
     
 
@@ -72,7 +72,7 @@ def french_insecable(text):
     tag_pattern = '</?\w+((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)/?>'
     intra_tag_finder = re.compile(r'(?P<prefix>(%s)?)(?P<text>([^<]*))(?P<suffix>(%s)?)' % (tag_pattern, tag_pattern))
 
-    nnbsp = u'<span style="white-space:nowrap">&thinsp;</span>'
+    nnbsp = '<span style="white-space:nowrap">&thinsp;</span>'
     space_finder = re.compile(r"""(?:
                             (\w\s[:;!\?\xbb])|       # Group 1, space before punctuation
                             ([\xab]\s\w)|
