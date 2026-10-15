@@ -36,6 +36,8 @@ version 0.3 (unreleased)
 * french_insecable() no longer alters the content of code-like html elements
   (pre, code, tt, kbd, samp, var, script, style, textarea), which broke code
   copied from french pages
+* Remove a debug print() of the "cmspage" role, which polluted the server
+  output on each rendering of a duplicated reverse ID
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

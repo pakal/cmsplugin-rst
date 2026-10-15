@@ -104,7 +104,6 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
     except Page.MultipleObjectsReturned:
-        print("MultipleObjectsReturned", reverse_id)
         msg = inliner.reporter.error("Targeted reverse ID of published page is not unique: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
         return [prb], [msg]
