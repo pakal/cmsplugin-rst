@@ -1,6 +1,16 @@
 version 0.3 (unreleased)
 ========================
 
+* Support python 3.10 to 3.14, django-cms 3.11 to 5.1 and django 4.2 to 6.1;
+  drop support for python 2 and older django/django-cms versions
+* Replace setup.py with pyproject.toml
+* Postprocessors now rely on beautifulsoup4 (optional extra "postprocessors"),
+  instead of the python2-only BeautifulSoup 3
+* Fix the initial migration for django>=2 (missing on_delete), and add
+  migration 0004 (related_name of the plugin pointer, as expected by modern
+  django-cms; no DB schema change)
+* Stop using django and docutils APIs which are removed or deprecated
+* Add a pytest test suite and a tox configuration for all supported versions
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The
