@@ -47,7 +47,8 @@ Configuration
 The behaviour of cmsplugin_rst can be tweaked with these Django settings (all are optional).
 
 **The plugin disallows, by default, insecure features like *file insertions* 
-and *raw* directive, in the restructured text renderer.**
+and *raw* directive, in the restructured text renderer. Links and images
+with unsafe URLs (eg. "javascript:...") are also neutralized, with a warning.**
 
 
 CMSPLUGIN_RST_WRITER_NAME
@@ -64,6 +65,11 @@ CMSPLUGIN_RST_SETTINGS_OVERRIDES
     A dict of settings which will be merged over plugin defaults, and passed to the docutils renderer. 
     See docutils ``publish_parts()`` and its ``settings_overrides`` parameter (http://docutils.sourceforge.net/docs/user/config.html#html4css1-writer).
     Amongst interesting settings are "initial_header_level" and "report_level".
+
+CMSPLUGIN_RST_ALLOWED_URL_SCHEMES
+    The URL schemes allowed in links and images, case-insensitively; relative URLs are always allowed
+    (default: ``("http", "https", "ftp", "ftps", "mailto", "tel")``).
+    Links with other schemes are replaced by their text, and images by their alternate text.
 
 CMSPLUGIN_RST_POSTPROCESSORS
     If and only if ``beautifulsoup4`` is installed, these postprocessors are applied 

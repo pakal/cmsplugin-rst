@@ -1,7 +1,62 @@
 
+import functools
 import re
 from docutils import nodes, utils
 from docutils.parsers.rst.roles import register_local_role
+from docutils.transforms import Transform
+
+from .utils import get_cfg
+
+
+DEFAULT_ALLOWED_URL_SCHEMES = ("http", "https", "ftp", "ftps", "mailto", "tel")
+
+# Browsers ignore ASCII control characters and spaces in URL schemes (eg. "java\tscript:")
+_IGNORED_URL_CHARS = re.compile(r"[\x00-\x20\x7f]+")
+_URL_SCHEME = re.compile(r"^([a-zA-Z][a-zA-Z0-9+.\-]*):")
+
+
+def is_safe_url(url, allowed_schemes=None):
+    """Return True if `url` is relative, or uses one of the allowed schemes (case-insensitive)."""
+    if allowed_schemes is None:
+        allowed_schemes = get_cfg("ALLOWED_URL_SCHEMES", DEFAULT_ALLOWED_URL_SCHEMES)
+    match = _URL_SCHEME.match(_IGNORED_URL_CHARS.sub("", url))
+    if match is None:
+        return True  # relative URL
+    return match.group(1).lower() in {scheme.lower() for scheme in allowed_schemes}
+
+
+class UnsafeURLsRemover(Transform):
+    """Neutralize links and images whose URL scheme is not allowed (eg. "javascript:").
+
+    Disabling the "raw" directive isn't sufficient to prevent script injection, since
+    standard hyperlinks accept any URL. Unsafe links are replaced by their text,
+    and unsafe images by their alternate text, with a warning.
+    """
+
+    default_priority = 845  # after all references are resolved, before system messages are gathered
+
+    def apply(self):
+        for node in list(self.document.findall(nodes.reference)):
+            uri = node.get("refuri")
+            if uri is not None and not is_safe_url(uri):
+                self.document.reporter.warning("Unsafe link URL removed: %r" % uri, base_node=node)
+                node.replace_self(nodes.inline(node.rawsource, "", *node.children))
+        for node in list(self.document.findall(nodes.image)):
+            uri = node.get("uri", "")
+            if not is_safe_url(uri):
+                self.document.reporter.warning("Unsafe image URL removed: %r" % uri, base_node=node)
+                node.replace_self(nodes.inline("", node.get("alt", "")))
+
+
+@functools.lru_cache(maxsize=None)
+def get_safe_writer_class(writer_class):
+    """Return a subclass of the docutils `writer_class`, which applies UnsafeURLsRemover."""
+
+    class SafeWriter(writer_class):
+        def get_transforms(self):
+            return super().get_transforms() + [UnsafeURLsRemover]
+
+    return SafeWriter
 
 
 def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, content=None):

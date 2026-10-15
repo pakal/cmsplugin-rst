@@ -11,6 +11,7 @@ from django.conf import settings
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 
+from .docutils_plugins import get_safe_writer_class
 from .utils import get_cfg, french_insecable
 
 
@@ -22,7 +23,7 @@ DOCUTILS_RENDERER_SETTINGS = {
     # we also disable the promotion of lone subsection title to a subtitle:
     "sectsubtitle_xform": False, 
     'file_insertion_enabled': False,  # SECURITY MEASURE (file hacking)
-    'raw_enabled': False, # SECURITY MEASURE (script tag)
+    'raw_enabled': False, # SECURITY MEASURE (script tag), see also UnsafeURLsRemover
     'report_level': 2,  # report warnings and above, by default
 }
 
@@ -35,7 +36,7 @@ def restructuredtext(value, header_level=None, report_level=None):
     if report_level is not None:  # starts from 1 too
         settings_overrides["report_level"] = report_level
     parts = publish_parts(source=force_str(value),
-                          writer=get_writer_class(get_cfg("WRITER_NAME", "html4css1"))(),
+                          writer=get_safe_writer_class(get_writer_class(get_cfg("WRITER_NAME", "html4css1")))(),
                           settings_overrides=settings_overrides)
     return force_str(parts["html_body"])
 

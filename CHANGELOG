@@ -28,6 +28,11 @@ version 0.3 (unreleased)
   blank lines, so that they no longer merge with its first/last paragraph,
   nor break when they end with explicit markup (substitution definitions,
   targets...)
+* SECURITY: links and images whose URL scheme is not allowed (eg.
+  "javascript:" or "data:") are now neutralized, since they allowed script
+  injection by page editors despite the disabling of the "raw" directive;
+  allowed schemes can be set with the new CMSPLUGIN_RST_ALLOWED_URL_SCHEMES
+  setting. docutils>=0.18 is now required.
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The
