@@ -67,8 +67,29 @@ def french_insecable(text):
 
     >>> french_insecable('<a title="foo !">')
     '<a title="foo !">'
-    """
 
+    Content of code-like elements should be preserved too :
+
+    >>> french_insecable('<p>Foo !</p><pre class="code">x = y ; z</pre><code>a ? b</code>')
+    '<p>Foo<span style="white-space:nowrap">&thinsp;</span>!</p><pre class="code">x = y ; z</pre><code>a ? b</code>'
+    """
+    parts = _PRESERVED_ELEMENTS_FINDER.split(text)
+    # split() returns [text, preserved element, its tag name, text, preserved element, its tag name, ..., text]
+    chunks = []
+    for index in range(0, len(parts), 3):
+        chunks.append(_french_insecable_text(parts[index]))
+        if index + 1 < len(parts):
+            chunks.append(parts[index + 1])
+    return "".join(chunks)
+
+
+# Elements whose content must not be modified by typographic transformations
+_PRESERVED_ELEMENTS_FINDER = re.compile(
+    r"(<(pre|code|tt|kbd|samp|var|script|style|textarea)\b[^>]*>.*?</\2\s*>)", re.DOTALL | re.IGNORECASE
+)
+
+
+def _french_insecable_text(text):
     tag_pattern = r'</?\w+((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)/?>'
     intra_tag_finder = re.compile(r'(?P<prefix>(%s)?)(?P<text>([^<]*))(?P<suffix>(%s)?)' % (tag_pattern, tag_pattern))
 

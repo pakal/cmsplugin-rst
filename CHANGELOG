@@ -33,6 +33,9 @@ version 0.3 (unreleased)
   injection by page editors despite the disabling of the "raw" directive;
   allowed schemes can be set with the new CMSPLUGIN_RST_ALLOWED_URL_SCHEMES
   setting. docutils>=0.18 is now required.
+* french_insecable() no longer alters the content of code-like html elements
+  (pre, code, tt, kbd, samp, var, script, style, textarea), which broke code
+  copied from french pages
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

@@ -97,6 +97,42 @@ def test_render_rich_text_french_typography():
     )
 
 
+def test_render_rich_text_french_typography_preserves_code():
+    pytest.importorskip("pygments")
+    source = (
+        "Voici du code : ``a ; b`` et :code:`c ? d`, puis :\n\n"
+        "::\n\n   seq 1 10 ; echo « ok »\n\n"
+        ".. code:: python\n\n   x = {1 : 2} ; y = 3 % 4\n\n"
+        "Fin !"
+    )
+    html = render_rich_text(source, language_code="fr")
+    nnbsp = '<span style="white-space:nowrap">&thinsp;</span>'
+    assert "Voici du code" + nnbsp + ":" in html
+    assert "puis" + nnbsp + ":" in html
+    assert "Fin" + nnbsp + "!" in html
+    assert '<tt class="docutils literal">a ; b</tt>' in html
+    assert "<code>c ? d</code>" in html
+    assert "seq 1 10 ; echo « ok »" in html
+    assert '<span class="literal number integer">1</span> <span class="punctuation">:</span>' in html
+    assert html.count("&thinsp;") == 3
+
+
+def test_french_insecable_preserved_elements():
+    from cmsplugin_rst.utils import french_insecable
+
+    nnbsp = '<span style="white-space:nowrap">&thinsp;</span>'
+    assert french_insecable("<PRE>a ;\nb</PRE> c !") == "<PRE>a ;\nb</PRE> c" + nnbsp + "!"
+    assert french_insecable('<pre class="x"><code>a ;</code>b ;</pre>') == '<pre class="x"><code>a ;</code>b ;</pre>'
+    assert french_insecable("<kbd>a ;</kbd><samp>b ;</samp><var>c ;</var><tt>d ;</tt>e ;") == (
+        "<kbd>a ;</kbd><samp>b ;</samp><var>c ;</var><tt>d ;</tt>e" + nnbsp + ";"
+    )
+    assert french_insecable("<script>a ;</script><style>b ;</style><textarea>c ;</textarea>") == (
+        "<script>a ;</script><style>b ;</style><textarea>c ;</textarea>"
+    )
+    # "<preview>" is not a "<pre>" element
+    assert french_insecable("<preview>a ;</preview>") == "<preview>a" + nnbsp + ";</preview>"
+
+
 def add_stuffs_to_soup(soup):
     soup.append("[postprocessed]")
 
