@@ -1,16 +1,24 @@
-
-version 0.4
-=================
+version 0.3 (unreleased)
+========================
 
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The
   publisher_is_draft filter is now only applied when the field still exists,
   keeping the role working unchanged on django-cms<4.
+* Add high-level render_rich_text() utility, usable outside of the cms plugin,
+  with optional "header_level" and "report_level" arguments
+* Add french_insecable() utility, automatically applied to the html output
+  when the page language is french (thin non-breaking spaces before double
+  punctuation signs)
+* Stop calling prettify() on postprocessed html, since it broke tag spacing
+* Add migration 0003 (field help texts, on_delete of plugin pointer)
+* Python 3 tweaks
+* Reduce the height of the RST textarea in the plugin form
 
 
 version 0.2
-=================
+===========
 
 * Add "cmspage" docutils role to get the URL of a djangocms page
 * Add "header_level" field in model, to override initial 
@@ -25,8 +33,8 @@ version 0.2
 * update cms plugin for django 1.8 and djangocms 3.2
 
 
-Version 0.1.1
-=================
+version 0.1.1
+=============
 
 * support for beautifulsoup postprocessors (CMSPLUGIN_RST_POSTPROCESSORS)
 * support for django 1.2 and djangocms 2.1, using South migrations
