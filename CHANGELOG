@@ -49,6 +49,9 @@ version 0.3 (unreleased)
 * Generated pygments stylesheets no longer apply the base text color of a
   style to all <code> elements (which made inline code unreadable with dark
   styles), and apply the style background to highlighted inline code too
+* Stylesheets generated for short token names no longer contain global rules
+  (for all <pre> elements, and line numbers tables) from Pygments, which
+  restyled the whole site
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

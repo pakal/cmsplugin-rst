@@ -78,16 +78,43 @@ def test_long_css_with_container_styles():
     assert "pre.code { background-color: #272822; color: #f8f8f2; }" in css
     assert "code:has(> span) { background-color: #272822; color: #f8f8f2; }" in css
     # plain inline code (without highlighted tokens) must not be styled
+    assert_only_scoped_selectors(css)
+
+
+def assert_only_scoped_selectors(css):
     for line in css.splitlines()[1:]:  # skip header comment
-        selectors = line.split("{")[0]
-        for selector in selectors.split(","):
+        for selector in line.split("{")[0].split(","):
             selector = selector.strip()
             assert selector.startswith(("pre.code", "code:has(> span)", "code .")), selector
 
 
 def test_short_css():
     css = get_pygments_css(tokennames="short")
-    assert "pre.code .k, code .k { color: #008000; font-weight: bold }" in css
+    assert css.startswith("/* Pygments style 'default', for docutils short token names */\n")
+    assert "pre.code { background-color: #f8f8f8; }" in css
+    assert "pre.code .k, code .k { color: #008000; font-weight: bold; }" in css
+    # each element has a single short class, so its rule has all its (inherited) properties
+    assert "pre.code .kp, code .kp { color: #008000; }" in css
+    assert "pre.code .nf, code .nf { color: #0000FF; }" in css
+    # no global rules for all <pre> elements, nor for line numbers tables, like in Pygments' stylesheets
+    assert_only_scoped_selectors(css)
+    assert "linenos" not in css
+
+
+def test_short_css_with_container_styles():
+    css = get_pygments_css("monokai", tokennames="short")
+    assert "pre.code { background-color: #272822; color: #f8f8f2; }" in css
+    assert "code:has(> span) { background-color: #272822; color: #f8f8f2; }" in css
+    assert_only_scoped_selectors(css)
+
+
+def test_short_css_matches_rendered_classes(settings):
+    settings.CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"syntax_highlight": "short"}
+    html = restructuredtext(CODE_BLOCK)
+    css = get_pygments_css(tokennames="short")
+    for cls in ["k", "nf", "s2"]:
+        assert '<span class="%s">' % cls in html
+        assert "pre.code .%s, code .%s {" % (cls, cls) in css
 
 
 def test_css_wrong_tokennames():

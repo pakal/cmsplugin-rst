@@ -154,8 +154,10 @@ work as is. To get a stylesheet for any other Pygments style (see ``pygmentize -
    $ python -m cmsplugin_rst.highlighting monokai > myproject/static/css/pygments-monokai.css
 
 Alternatively, you can switch docutils to short class names, with
-``CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"syntax_highlight": "short"}``, and then use
-any stylesheet generated for Pygments, eg. with ``python -m cmsplugin_rst.highlighting monokai short``.
+``CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"syntax_highlight": "short"}``, and then generate a
+matching stylesheet with ``python -m cmsplugin_rst.highlighting monokai short``.
+Generated stylesheets only target highlighted code, unlike the stylesheets of Pygments itself
+(eg. from ``pygmentize -S monokai -f html``), which also restyle all ``<pre>`` elements of the site.
 Setting ``"syntax_highlight": "none"`` disables highlighting altogether.
 
 
