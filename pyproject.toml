@@ -12,7 +12,7 @@ license-files = ["LICENSE", "AUTHORS"]
 authors = [{ name = "Pascal Chambon", email = "pythoniks@gmail.com" }]
 requires-python = ">=3.10"
 dependencies = [
-    "docutils>=0.18",
+    "docutils>=0.18.1",  # for Node.findall()
     "django-cms>=3.11",
     "django>=4.2",
 ]

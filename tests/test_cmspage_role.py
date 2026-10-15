@@ -1,5 +1,6 @@
 import datetime
 import html as html_lib
+import re
 
 import pytest
 from cms.api import create_page
@@ -64,7 +65,8 @@ def test_cmspage_role_with_explicit_name(page):
 
 def test_cmspage_role_with_class_option(page):
     html = restructuredtext(".. role:: fancypage(cmspage)\n   :class: fancy\n\n:fancypage:`my-page`")
-    assert '<a class="reference external fancy" href="/en/my-page/">My Page</a>' in html
+    # the order of classes depends on the docutils version
+    assert re.search(r'<a class="(reference external fancy|fancy reference external)" href="/en/my-page/">My Page</a>', html)
 
 
 @pytest.mark.parametrize("option_name", ["class", "classes"])

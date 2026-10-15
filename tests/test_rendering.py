@@ -63,8 +63,9 @@ def test_settings_overrides(settings):
 
 def test_report_level():
     source = "`unclosed"
-    assert "system-message" in restructuredtext(source)
-    assert "system-message" not in restructuredtext(source, report_level=5)
+    assert 'class="system-message"' in restructuredtext(source)
+    # docutils<0.19 still links the "problematic" markup to the (unreported) message
+    assert 'class="system-message"' not in restructuredtext(source, report_level=5)
 
 
 def test_render_rich_text_replacements():

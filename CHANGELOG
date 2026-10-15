@@ -32,7 +32,7 @@ version 0.3 (unreleased)
   "javascript:" or "data:") are now neutralized, since they allowed script
   injection by page editors despite the disabling of the "raw" directive;
   allowed schemes can be set with the new CMSPLUGIN_RST_ALLOWED_URL_SCHEMES
-  setting. docutils>=0.18 is now required.
+  setting. docutils>=0.18.1 is now required.
 * french_insecable() no longer alters the content of code-like html elements
   (pre, code, tt, kbd, samp, var, script, style, textarea), which broke code
   copied from french pages
