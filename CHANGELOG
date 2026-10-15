@@ -24,6 +24,10 @@ version 0.3 (unreleased)
   override_settings() in tests)
 * A header_level of 0 (allowed by the plugin form) now means "default
   level", instead of producing invalid <h0> tags
+* CMSPLUGIN_RST_CONTENT_PREFIX/SUFFIX are now separated from the content by
+  blank lines, so that they no longer merge with its first/last paragraph,
+  nor break when they end with explicit markup (substitution definitions,
+  targets...)
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

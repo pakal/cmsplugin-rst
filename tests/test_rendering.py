@@ -77,6 +77,17 @@ def test_render_rich_text_prefix_suffix(settings):
     settings.CMSPLUGIN_RST_CONTENT_SUFFIX = "*SUFFIX*"
     html = render_rich_text("body")
     assert html.index("<em>PREFIX</em>") < html.index("body") < html.index("<em>SUFFIX</em>")
+    # prefix and suffix are separate paragraphs, not merged with the content
+    assert "<p><em>PREFIX</em></p>\n<p>body</p>\n<p><em>SUFFIX</em></p>" in html
+
+
+def test_render_rich_text_prefix_with_explicit_markup(settings):
+    settings.CMSPLUGIN_RST_CONTENT_PREFIX = ".. |hello| replace:: Hello"
+    settings.CMSPLUGIN_RST_CONTENT_SUFFIX = ".. _target: https://example.com"
+    html = render_rich_text("|hello| world, see target_")
+    assert "<p>Hello world, see <a" in html
+    assert 'href="https://example.com"' in html
+    assert "system-message" not in html
 
 
 def test_render_rich_text_french_typography():

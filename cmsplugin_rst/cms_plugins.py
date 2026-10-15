@@ -41,9 +41,10 @@ def restructuredtext(value, header_level=None, report_level=None):
 
 
 def render_rich_text(rst_string, language_code="", header_level=None, report_level=None):
-    rst = get_cfg("CONTENT_PREFIX", "") + "\n"
+    # blank lines are needed so that prefix/suffix don't merge with the content's first/last block
+    rst = get_cfg("CONTENT_PREFIX", "") + "\n\n"
     rst += rst_string
-    rst += "\n" + get_cfg("CONTENT_SUFFIX", "") 
+    rst += "\n\n" + get_cfg("CONTENT_SUFFIX", "")
     rst = rst.replace("{{ MEDIA_URL }}", settings.MEDIA_URL)
     rst = rst.replace("{{ STATIC_URL }}", settings.STATIC_URL)
     content = restructuredtext(rst, header_level=header_level, report_level=report_level)
