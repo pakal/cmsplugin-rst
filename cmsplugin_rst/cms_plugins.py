@@ -14,6 +14,7 @@ from django.utils.safestring import mark_safe
 from .utils import get_cfg, french_insecable
 
 
+# Default docutils settings, over which CMSPLUGIN_RST_SETTINGS_OVERRIDES are merged at render time
 DOCUTILS_RENDERER_SETTINGS = {
     "initial_header_level": 1,
     # important, to have even lone titles stay in the html fragment:
@@ -24,11 +25,11 @@ DOCUTILS_RENDERER_SETTINGS = {
     'raw_enabled': False, # SECURITY MEASURE (script tag)
     'report_level': 2,  # report warnings and above, by default
 }
-DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 
 
 def restructuredtext(value, header_level=None, report_level=None):
     settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
+    settings_overrides.update(get_cfg("SETTINGS_OVERRIDES", {}))
     if header_level is not None:  # starts from 1
         settings_overrides["initial_header_level"] = header_level
     if report_level is not None:  # starts from 1 too

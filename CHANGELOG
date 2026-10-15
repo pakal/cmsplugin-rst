@@ -19,6 +19,9 @@ version 0.3 (unreleased)
 * Remove the unreachable fallback of restructuredtext() for a missing
   docutils, which would have returned the unescaped source as "safe" html
   (docutils is a mandatory dependency anyway)
+* CMSPLUGIN_RST_SETTINGS_OVERRIDES is now read at each rendering instead of
+  once at import time, so that it can be changed at runtime (eg. with
+  override_settings() in tests)
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

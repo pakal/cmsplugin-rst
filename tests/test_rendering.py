@@ -34,6 +34,22 @@ def test_html_in_source_is_escaped():
     assert "&lt;script&gt;alert(1)&lt;/script&gt; &amp; co" in html
 
 
+def test_settings_overrides(settings):
+    source = 'Title\n=====\n\n"quoted"'
+    html = restructuredtext(source)
+    assert "<h1>Title</h1>" in html
+    assert "&quot;quoted&quot;" in html
+    settings.CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"initial_header_level": 2, "smart_quotes": True}
+    html = restructuredtext(source)
+    assert "<h2>Title</h2>" in html
+    assert "“quoted”" in html
+    # explicit arguments have priority over global settings
+    assert "<h4>Title</h4>" in restructuredtext(source, header_level=4)
+    # overrides must not leak into the defaults
+    settings.CMSPLUGIN_RST_SETTINGS_OVERRIDES = {}
+    assert "<h1>Title</h1>" in restructuredtext(source)
+
+
 def test_report_level():
     source = "`unclosed"
     assert "system-message" in restructuredtext(source)

@@ -43,10 +43,8 @@ def test_unknown_language_is_reported():
         ("none", '<pre class="code python literal-block">\ndef f(x):'),
     ],
 )
-def test_syntax_highlight_setting(monkeypatch, syntax_highlight, expected):
-    from cmsplugin_rst import cms_plugins
-
-    monkeypatch.setitem(cms_plugins.DOCUTILS_RENDERER_SETTINGS, "syntax_highlight", syntax_highlight)
+def test_syntax_highlight_setting(settings, syntax_highlight, expected):
+    settings.CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"syntax_highlight": syntax_highlight}
     assert expected in restructuredtext(CODE_BLOCK)
 
 
