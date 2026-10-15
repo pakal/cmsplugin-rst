@@ -1,3 +1,6 @@
+from docutils.core import publish_parts
+from docutils.writers import get_writer_class
+
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cmsplugin_rst.forms import RstPluginForm
@@ -7,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
-from django import template
 
 from .utils import get_cfg, french_insecable
 
@@ -26,23 +28,15 @@ DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 
 
 def restructuredtext(value, header_level=None, report_level=None):
-    try:
-        from docutils.core import publish_parts
-        from docutils.writers import get_writer_class
-    except ImportError:
-        if settings.DEBUG:
-            raise template.TemplateSyntaxError("Error in 'restructuredtext' filter: The Python docutils library isn't installed.")
-        return force_str(value)
-    else:
-        settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
-        if header_level is not None:  # starts from 1
-            settings_overrides["initial_header_level"] = header_level
-        if report_level is not None:  # starts from 1 too
-            settings_overrides["report_level"] = report_level
-        parts = publish_parts(source=force_str(value), 
-                              writer=get_writer_class(get_cfg("WRITER_NAME", "html4css1"))(),
-                              settings_overrides=settings_overrides)
-        return force_str(parts["html_body"])
+    settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
+    if header_level is not None:  # starts from 1
+        settings_overrides["initial_header_level"] = header_level
+    if report_level is not None:  # starts from 1 too
+        settings_overrides["report_level"] = report_level
+    parts = publish_parts(source=force_str(value),
+                          writer=get_writer_class(get_cfg("WRITER_NAME", "html4css1"))(),
+                          settings_overrides=settings_overrides)
+    return force_str(parts["html_body"])
 
 
 def render_rich_text(rst_string, language_code="", header_level=None, report_level=None):

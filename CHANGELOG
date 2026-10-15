@@ -16,6 +16,9 @@ version 0.3 (unreleased)
   a matching stylesheet (static file "cmsplugin_rst/pygments.css"), and add
   "python -m cmsplugin_rst.highlighting [STYLE [long|short]]" to generate
   stylesheets for other pygments styles (docutils uses long token class names)
+* Remove the unreachable fallback of restructuredtext() for a missing
+  docutils, which would have returned the unescaped source as "safe" html
+  (docutils is a mandatory dependency anyway)
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

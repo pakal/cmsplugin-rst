@@ -28,6 +28,12 @@ def test_insecure_directives_are_disabled(source):
     assert "root:" not in html
 
 
+def test_html_in_source_is_escaped():
+    html = restructuredtext("<script>alert(1)</script> & co")
+    assert "<script>" not in html
+    assert "&lt;script&gt;alert(1)&lt;/script&gt; &amp; co" in html
+
+
 def test_report_level():
     source = "`unclosed"
     assert "system-message" in restructuredtext(source)
