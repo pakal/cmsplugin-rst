@@ -117,6 +117,34 @@ def test_short_css_matches_rendered_classes(settings):
         assert "pre.code .%s, code .%s {" % (cls, cls) in css
 
 
+@pytest.mark.parametrize("tokennames", ["long", "short"])
+def test_css_style_without_background(monkeypatch, tokennames):
+    import pygments.styles
+    from pygments.style import Style
+    from pygments.token import Keyword
+
+    class MinimalStyle(Style):
+        background_color = None
+        styles = {Keyword: "bold"}
+
+    monkeypatch.setattr(pygments.styles, "get_style_by_name", lambda name: MinimalStyle)
+    css = get_pygments_css("minimal", tokennames=tokennames)
+    lines = css.splitlines()
+    assert lines[:3] == [
+        "/* Pygments style 'minimal', for docutils %s token names */" % tokennames,
+        "pre.code .ln, code .ln { color: #999999; user-select: none; }",
+        "pre.code .keyword, code .keyword { font-weight: bold; }"
+        if tokennames == "long"
+        else "pre.code .k, code .k { font-weight: bold; }",
+    ]
+    if tokennames == "long":
+        assert len(lines) == 3  # sub-tokens inherit via the CSS cascade
+    else:
+        assert "pre.code .kp, code .kp { font-weight: bold; }" in lines  # sub-tokens need all properties
+    assert "pre.code {" not in css
+    assert "code:has(> span) {" not in css
+
+
 def test_css_wrong_tokennames():
     with pytest.raises(ValueError):
         get_pygments_css(tokennames="none")
@@ -127,6 +155,14 @@ def test_css_command_line():
         [sys.executable, "-m", "cmsplugin_rst.highlighting", "monokai"], text=True
     )
     assert output == get_pygments_css("monokai")
+
+
+def test_css_main(monkeypatch, capsys):
+    import runpy
+
+    monkeypatch.setattr(sys, "argv", ["highlighting", "monokai", "short"])
+    runpy.run_module("cmsplugin_rst.highlighting", run_name="__main__")
+    assert capsys.readouterr().out == get_pygments_css("monokai", "short")
 
 
 def test_bundled_stylesheet():

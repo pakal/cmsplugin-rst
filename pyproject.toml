@@ -50,6 +50,7 @@ test = [
     "pytest-django",
     "beautifulsoup4",
     "pygments",
+    "pytest-cov",
 ]
 
 [project.urls]
@@ -71,3 +72,12 @@ filterwarnings = [
     "error::DeprecationWarning:cmsplugin_rst.*",
     "error::PendingDeprecationWarning:cmsplugin_rst.*",
 ]
+
+[tool.coverage.run]
+branch = true
+source = ["cmsplugin_rst"]
+
+[tool.coverage.report]
+show_missing = true
+# some branches only run with specific django-cms versions (see tox envs)
+fail_under = 95

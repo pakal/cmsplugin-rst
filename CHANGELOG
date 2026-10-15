@@ -52,6 +52,11 @@ version 0.3 (unreleased)
 * Stylesheets generated for short token names no longer contain global rules
   (for all <pre> elements, and line numbers tables) from Pygments, which
   restyled the whole site
+* Measure test coverage (pytest-cov, 95% minimum), with tests for the
+  previously untested code paths (postprocessors chaining and absence of
+  beautifulsoup4, legacy "class" option of the "cmspage" role, stylesheet
+  generation for styles without background, command line of
+  cmsplugin_rst.highlighting), and remove dead code
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

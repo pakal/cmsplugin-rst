@@ -169,12 +169,16 @@ The test suite uses pytest and pytest-django; run it against your current enviro
 
     $ pip install -e .[test]
     $ pytest
+    $ pytest --cov    # with a coverage report
 
 Or against all supported python/django-cms/django combinations, with tox:
 
     $ pip install tox tox-uv
     $ tox p                         # all environments, in parallel
     $ tox -e py313-cms50-dj52       # a single environment
+
+Some code paths are only exercised with specific django-cms versions, or with djangocms-versioning
+(see the ``-versioning`` tox environments).
 
 A legacy demo project (targeting old django/django-cms versions) with a sqlite DB is included in repository with a sqlite DB is included in repository, 
 as a git submodule (https://git-scm.com/docs/git-submodule).

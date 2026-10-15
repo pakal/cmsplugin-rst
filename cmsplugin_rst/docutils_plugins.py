@@ -103,7 +103,6 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
     from cms.models import Page  # LAZY loading, else troubles on setup
 
     result = re.match(r"^(.+) \<(.+)\>$", text)
-    #print (">> djangocms_link_role regex result is", result, result.groups() if result else None)
     if result:
         name, reverse_id = result.groups()
     else:
@@ -130,6 +129,5 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
         node = nodes.reference(rawtext, name, refuri=ref,
                                **options)
         return [node], []
-    assert False, "djangocms_link_role buggi implementation"
 
 register_local_role("cmspage", djangocms_link_role)

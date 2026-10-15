@@ -67,6 +67,22 @@ def test_cmspage_role_with_class_option(page):
     assert '<a class="reference external fancy" href="/en/my-page/">My Page</a>' in html
 
 
+@pytest.mark.parametrize("option_name", ["class", "classes"])
+def test_cmspage_role_legacy_class_option(page, option_name):
+    # docutils<0.22 passes the "class" option of custom roles as is, newer versions normalize it to "classes"
+    from cmsplugin_rst.docutils_plugins import djangocms_link_role
+
+    options = {option_name: ["fancy"]}
+    node_list, messages = djangocms_link_role(
+        "cmspage", ":cmspage:`my-page`", "my-page", 1, inliner=None, options=options
+    )
+    assert messages == []
+    [node] = node_list
+    assert node["classes"] == ["fancy"]
+    assert node["refuri"] == "/en/my-page/"
+    assert options == {option_name: ["fancy"]}  # caller's options are not modified
+
+
 def test_cmspage_role_duplicate_reverse_id(page, make_page, capsys):
     make_page("Other Page")
     # create_page() refuses duplicate reverse IDs, but nothing prevents them in DB
