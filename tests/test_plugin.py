@@ -16,6 +16,12 @@ def test_plugin_render():
     assert str(instance) == "test"
 
 
+def test_plugin_render_with_header_level_0():
+    instance = RstPluginModel(name="test", body="Title\n=====", header_level=0)
+    context = RstPlugin().render({"LANGUAGE_CODE": "en"}, instance, None)
+    assert "<h1>Title</h1>" in context["content"]
+
+
 def test_plugin_form():
     form = RstPluginForm(data={"name": "x", "header_level": "", "body": "hello"})
     assert form.is_valid(), form.errors

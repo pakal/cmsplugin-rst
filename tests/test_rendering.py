@@ -15,6 +15,17 @@ def test_lone_title_is_kept_and_header_level():
     assert "<h3>My Title</h3>" in html
 
 
+@pytest.mark.parametrize("header_level", [0, -1])
+def test_header_level_below_1_is_ignored(header_level):
+    html = restructuredtext("My Title\n========\n\nSome text", header_level=header_level)
+    assert "<h1>My Title</h1>" in html
+
+
+def test_header_level_above_6_is_capped():
+    html = restructuredtext("My Title\n========\n\nSome text", header_level=7)
+    assert '<h6 class="h7">My Title</h6>' in html
+
+
 @pytest.mark.parametrize(
     "source",
     [

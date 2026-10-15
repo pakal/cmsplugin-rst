@@ -30,7 +30,7 @@ DOCUTILS_RENDERER_SETTINGS = {
 def restructuredtext(value, header_level=None, report_level=None):
     settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
     settings_overrides.update(get_cfg("SETTINGS_OVERRIDES", {}))
-    if header_level is not None:  # starts from 1
+    if header_level is not None and header_level >= 1:  # starts from 1, else "<h0>" tags are output
         settings_overrides["initial_header_level"] = header_level
     if report_level is not None:  # starts from 1 too
         settings_overrides["report_level"] = report_level

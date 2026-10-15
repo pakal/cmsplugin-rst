@@ -22,6 +22,8 @@ version 0.3 (unreleased)
 * CMSPLUGIN_RST_SETTINGS_OVERRIDES is now read at each rendering instead of
   once at import time, so that it can be changed at runtime (eg. with
   override_settings() in tests)
+* A header_level of 0 (allowed by the plugin form) now means "default
+  level", instead of producing invalid <h0> tags
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The
