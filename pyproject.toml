@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cmsplugin-rst"
+dynamic = ["version"]
+description = "Restructured Text plugin for Django CMS."
+readme = "README.rst"
+license = "BSD-3-Clause"
+license-files = ["LICENSE", "AUTHORS"]
+authors = [{ name = "Pascal Chambon", email = "pythoniks@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "docutils",
+    "django-cms>=3.11",
+    "django>=4.2",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
+    "Framework :: Django CMS",
+    "Framework :: Django CMS :: 3.11",
+    "Framework :: Django CMS :: 4.1",
+    "Framework :: Django CMS :: 5.0",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Text Processing :: Markup",
+]
+
+[project.optional-dependencies]
+postprocessors = ["beautifulsoup4"]
+test = [
+    "pytest",
+    "pytest-django",
+    "beautifulsoup4",
+]
+
+[project.urls]
+Homepage = "https://github.com/pakal/cmsplugin-rst"
+Changelog = "https://github.com/pakal/cmsplugin-rst/blob/master/CHANGELOG"
+
+[tool.setuptools.dynamic]
+version = { attr = "cmsplugin_rst.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["cmsplugin_rst*"]
