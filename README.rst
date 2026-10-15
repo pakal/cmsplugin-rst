@@ -1,5 +1,5 @@
 #############
-cmsplugin_rst
+Cmsplugin Rst
 #############
 
 A plugin for `Django CMS`_, which renders restructured text into html, using docutils.
@@ -62,9 +62,11 @@ CMSPLUGIN_RST_CONTENT_SUFFIX
     A restructuredtext string wich will be appended to all your RST plugin contents, before rendering.
 
 CMSPLUGIN_RST_SETTINGS_OVERRIDES
-    A dict of settings which will be merged over plugin defaults, and passed to the docutils renderer. 
+    A dict of settings which will be merged over plugin defaults, and passed to the docutils renderer.
     See docutils ``publish_parts()`` and its ``settings_overrides`` parameter (http://docutils.sourceforge.net/docs/user/config.html#html4css1-writer).
     Amongst interesting settings are "initial_header_level" and "report_level".
+    Each plugin instance also has its own ``header_level`` field, in its edition form, which overrides
+    "initial_header_level" for that instance only (0 or empty means "use the default").
 
 CMSPLUGIN_RST_ALLOWED_URL_SCHEMES
     The URL schemes allowed in links and images, case-insensitively; relative URLs are always allowed
@@ -106,7 +108,18 @@ that you'll have set previously in advanced page parameters:
 Targeted pages must be published (with djangocms-versioning, if installed, on django-cms>=4),
 and their reverse IDs must exist and be unique on the current site, else the rendering of the link fails.
 
-   
+
+*******************
+French Typography
+*******************
+
+If a plugin instance's language is French (ie. its ``language`` starts with "fr"),
+thin non-breaking spaces are automatically inserted before double punctuation signs
+(``!?;:»``) and inside guillemets (``«  »``), following French typographic conventions.
+This only affects the rendered output, not the content of ``<pre>``, ``<code>``, ``<tt>``,
+``<kbd>``, ``<samp>``, ``<var>``, ``<script>``, ``<style>`` or ``<textarea>`` elements.
+
+
 *******************
 Syntax Highlighting
 *******************
@@ -159,6 +172,23 @@ matching stylesheet with ``python -m cmsplugin_rst.highlighting monokai short``.
 Generated stylesheets only target highlighted code, unlike the stylesheets of Pygments itself
 (eg. from ``pygmentize -S monokai -f html``), which also restyle all ``<pre>`` elements of the site.
 Setting ``"syntax_highlight": "none"`` disables highlighting altogether.
+
+
+*************************************
+Rendering outside of the CMS Plugin
+*************************************
+
+The ``cmsplugin_rst.cms_plugins.render_rich_text()`` function, used internally by the plugin,
+can also be called directly to render restructuredtext from your own code (eg. views, templatetags):
+
+::
+
+   from cmsplugin_rst.cms_plugins import render_rich_text
+
+   html = render_rich_text(rst_string, language_code="fr", header_level=2, report_level=3)
+
+``language_code`` determines whether French typography rules (see above) are applied;
+``header_level`` and ``report_level`` override the corresponding docutils settings for this call only.
 
 
 *************
