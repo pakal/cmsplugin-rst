@@ -23,10 +23,12 @@ classifiers = [
     "Framework :: Django :: 4.2",
     "Framework :: Django :: 5.2",
     "Framework :: Django :: 6.0",
+    "Framework :: Django :: 6.1",
     "Framework :: Django CMS",
     "Framework :: Django CMS :: 3.11",
     "Framework :: Django CMS :: 4.1",
     "Framework :: Django CMS :: 5.0",
+    "Framework :: Django CMS :: 5.1",
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
@@ -57,3 +59,13 @@ version = { attr = "cmsplugin_rst.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["cmsplugin_rst*"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+pythonpath = ["."]
+testpaths = ["tests", "cmsplugin_rst"]
+addopts = "--doctest-modules"
+filterwarnings = [
+    "error::DeprecationWarning:cmsplugin_rst.*",
+    "error::PendingDeprecationWarning:cmsplugin_rst.*",
+]
