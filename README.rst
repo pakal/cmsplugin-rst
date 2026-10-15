@@ -19,6 +19,10 @@ To use postprocessors (see below), install the optional ``beautifulsoup4`` depen
 
     $ pip install cmsplugin_rst[postprocessors]
 
+To get syntax highlighting of code blocks (see below), install the optional ``pygments`` dependency:
+
+    $ pip install cmsplugin_rst[highlighting]
+
 Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS``, in your django settings.
 
 And then migrate the DB:
@@ -96,6 +100,58 @@ that you'll have set previously in advanced page parameters:
 Reverse IDs must exist and be unique in the djangocms DB, else the rendering of the link fails.
 
    
+*******************
+Syntax Highlighting
+*******************
+
+The standard docutils ``code`` directive (and its aliases ``code-block`` and ``sourcecode``)
+highlights source code, provided that Pygments is installed:
+
+::
+
+   .. code:: python
+      :number-lines:
+
+      def hello(name):
+          return "Hello %s" % name
+
+Inline code can be highlighted too, by defining a custom role based on the ``code`` role:
+
+::
+
+   .. role:: py(code)
+      :language: python
+
+   Use :py:`import os` to import the module.
+
+Beware, without Pygments, code blocks with a language argument are replaced by a
+"Pygments package not found" warning message, unless "report_level" is set above 2
+or "syntax_highlight" is set to "none" (see below), in which case they are rendered
+as plain literal blocks. Code blocks without a language argument are never highlighted.
+
+Highlighted tokens are wrapped in ``<span>`` elements with CSS classes, but no styling is applied
+by default: include the stylesheet bundled with this app (Pygments' "default" style) in your
+page templates:
+
+::
+
+   {% load static %}
+   <link rel="stylesheet" href="{% static 'cmsplugin_rst/pygments.css' %}">
+
+Beware, docutils uses *long* token class names by default (eg. ``class="name function"``),
+so the stylesheets of Pygments itself, which use short class names (eg. ``class="nf"``), don't
+work as is. To get a stylesheet for any other Pygments style (see ``pygmentize -L styles``), run:
+
+::
+
+   $ python -m cmsplugin_rst.highlighting monokai > myproject/static/css/pygments-monokai.css
+
+Alternatively, you can switch docutils to short class names, with
+``CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"syntax_highlight": "short"}``, and then use
+any stylesheet generated for Pygments, eg. with ``python -m cmsplugin_rst.highlighting monokai short``.
+Setting ``"syntax_highlight": "none"`` disables highlighting altogether.
+
+
 *************
 Tests
 *************

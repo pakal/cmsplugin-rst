@@ -44,10 +44,12 @@ classifiers = [
 
 [project.optional-dependencies]
 postprocessors = ["beautifulsoup4"]
+highlighting = ["pygments"]
 test = [
     "pytest",
     "pytest-django",
     "beautifulsoup4",
+    "pygments",
 ]
 
 [project.urls]

@@ -11,6 +11,11 @@ version 0.3 (unreleased)
   django-cms; no DB schema change)
 * Stop using django and docutils APIs which are removed or deprecated
 * Add a pytest test suite and a tox configuration for all supported versions
+* Document syntax highlighting of code via the standard docutils "code"
+  directive/role, add the optional "highlighting" extra (pygments), bundle
+  a matching stylesheet (static file "cmsplugin_rst/pygments.css"), and add
+  "python -m cmsplugin_rst.highlighting [STYLE [long|short]]" to generate
+  stylesheets for other pygments styles (docutils uses long token class names)
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

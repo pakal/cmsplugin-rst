@@ -1,0 +1,43 @@
+/* Pygments style 'default', for docutils long token names */
+pre.code { background-color: #f8f8f8; }
+pre.code .ln, code .ln { color: #999999; user-select: none; }
+pre.code .whitespace, code .whitespace { color: #bbbbbb; }
+pre.code .comment, code .comment { color: #3D7B7B; font-style: italic; }
+pre.code .comment.preproc, code .comment.preproc { color: #9C6500; font-style: normal; }
+pre.code .keyword, code .keyword { color: #008000; font-weight: bold; }
+pre.code .keyword.pseudo, code .keyword.pseudo { font-weight: normal; }
+pre.code .keyword.type, code .keyword.type { color: #B00040; font-weight: normal; }
+pre.code .operator, code .operator { color: #666666; }
+pre.code .operator.word, code .operator.word { color: #AA22FF; font-weight: bold; }
+pre.code .name.builtin, code .name.builtin { color: #008000; }
+pre.code .name.function, code .name.function { color: #0000FF; }
+pre.code .name.class, code .name.class { color: #0000FF; font-weight: bold; }
+pre.code .name.namespace, code .name.namespace { color: #0000FF; font-weight: bold; }
+pre.code .name.exception, code .name.exception { color: #CB3F38; font-weight: bold; }
+pre.code .name.variable, code .name.variable { color: #19177C; }
+pre.code .name.constant, code .name.constant { color: #880000; }
+pre.code .name.label, code .name.label { color: #767600; }
+pre.code .name.entity, code .name.entity { color: #717171; font-weight: bold; }
+pre.code .name.attribute, code .name.attribute { color: #687822; }
+pre.code .name.tag, code .name.tag { color: #008000; font-weight: bold; }
+pre.code .name.decorator, code .name.decorator { color: #AA22FF; }
+pre.code .literal.string, code .literal.string { color: #BA2121; }
+pre.code .literal.string.doc, code .literal.string.doc { font-style: italic; }
+pre.code .literal.string.interpol, code .literal.string.interpol { color: #A45A77; font-weight: bold; }
+pre.code .literal.string.escape, code .literal.string.escape { color: #AA5D1F; font-weight: bold; }
+pre.code .literal.string.regex, code .literal.string.regex { color: #A45A77; }
+pre.code .literal.string.symbol, code .literal.string.symbol { color: #19177C; }
+pre.code .literal.string.other, code .literal.string.other { color: #008000; }
+pre.code .literal.number, code .literal.number { color: #666666; }
+pre.code .generic.heading, code .generic.heading { color: #000080; font-weight: bold; }
+pre.code .generic.subheading, code .generic.subheading { color: #800080; font-weight: bold; }
+pre.code .generic.deleted, code .generic.deleted { color: #A00000; }
+pre.code .generic.inserted, code .generic.inserted { color: #008400; }
+pre.code .generic.error, code .generic.error { color: #E40000; }
+pre.code .generic.emph, code .generic.emph { font-style: italic; }
+pre.code .generic.strong, code .generic.strong { font-weight: bold; }
+pre.code .generic.emphstrong, code .generic.emphstrong { font-weight: bold; font-style: italic; }
+pre.code .generic.prompt, code .generic.prompt { color: #000080; font-weight: bold; }
+pre.code .generic.output, code .generic.output { color: #717171; }
+pre.code .generic.traceback, code .generic.traceback { color: #0044DD; }
+pre.code .error, code .error { border: 1px solid #FF0000; }
