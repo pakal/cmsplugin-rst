@@ -38,6 +38,9 @@ version 0.3 (unreleased)
   copied from french pages
 * Remove a debug print() of the "cmspage" role, which polluted the server
   output on each rendering of a duplicated reverse ID
+* The "cmspage" role now only looks up pages of the current site, since
+  reverse IDs are only unique per site; on multi-site installations, links
+  to reverse IDs used on several sites always failed as "not unique"
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

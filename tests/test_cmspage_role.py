@@ -39,6 +39,23 @@ def test_cmspage_role_duplicate_reverse_id(page, capsys):
     assert capsys.readouterr().out == ""
 
 
+def test_cmspage_role_multisite(page, settings):
+    from django.contrib.sites.models import Site
+
+    other_site = Site.objects.create(domain="other.example.com", name="other")
+    kwargs = {"published": True} if settings.CMS_VERSION < (4, 0) else {}
+    create_page("Other Site Page", "page.html", "en", reverse_id="my-page", site=other_site, **kwargs)
+
+    html = restructuredtext(":cmspage:`my-page`")
+    assert 'href="/en/my-page/"' in html
+    assert ">My Page</a>" in html
+
+    settings.SITE_ID = other_site.pk
+    html = restructuredtext(":cmspage:`my-page`")
+    assert 'href="/en/other-site-page/"' in html
+    assert ">Other Site Page</a>" in html
+
+
 @pytest.mark.django_db
 def test_cmspage_role_unknown_reverse_id():
     html = restructuredtext(":cmspage:`unknown`")

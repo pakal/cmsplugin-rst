@@ -98,7 +98,8 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
             pass
         else:
             page_lookup['publisher_is_draft'] = False
-        page = Page.objects.all().get(**page_lookup)
+        # reverse-IDs are only unique per site
+        page = Page.objects.on_site().get(**page_lookup)
     except Page.DoesNotExist:
         msg = inliner.reporter.error("Targeted reverse ID of published page doesn't exist: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
