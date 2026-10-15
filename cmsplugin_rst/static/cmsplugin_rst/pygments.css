@@ -34,7 +34,7 @@ pre.code .generic.heading, code .generic.heading { color: #000080; font-weight: 
 pre.code .generic.subheading, code .generic.subheading { color: #800080; font-weight: bold; }
 pre.code .generic.deleted, code .generic.deleted { color: #A00000; }
 pre.code .generic.inserted, code .generic.inserted { color: #008400; }
-pre.code .generic.error, code .generic.error { color: #E40000; }
+pre.code .generic.error, code .generic.error { color: #E40000; border: none; }
 pre.code .generic.emph, code .generic.emph { font-style: italic; }
 pre.code .generic.strong, code .generic.strong { font-weight: bold; }
 pre.code .generic.emphstrong, code .generic.emphstrong { font-weight: bold; font-style: italic; }
@@ -42,3 +42,4 @@ pre.code .generic.prompt, code .generic.prompt { color: #000080; font-weight: bo
 pre.code .generic.output, code .generic.output { color: #717171; }
 pre.code .generic.traceback, code .generic.traceback { color: #0044DD; }
 pre.code .error, code .error { border: 1px solid #FF0000; }
+pre.code .name.variable.class, code .name.variable.class { color: #19177C; font-weight: normal; }

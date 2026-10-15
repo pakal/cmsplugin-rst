@@ -55,6 +55,13 @@ version 0.3 (unreleased)
 * Stylesheets generated for short token names no longer contain global rules
   (for all <pre> elements, and line numbers tables) from Pygments, which
   restyled the whole site
+* Stylesheets generated for long token names no longer let the rules of
+  unrelated tokens apply to tokens which have a superset of their classes
+  (eg. ".name.class" made "name variable class" tokens bold, ".error" gave
+  "generic error" tokens a border), nor let non-standard tokens of some
+  styles (eg. "Comment.PreProc" of gruvbox) override standard tokens with
+  the same classes (eg. "Comment.Preproc"); the bundled stylesheet is
+  regenerated accordingly
 * Measure test coverage (pytest-cov, 95% minimum), with tests for the
   previously untested code paths (postprocessors chaining and absence of
   beautifulsoup4, legacy "class" option of the "cmspage" role, stylesheet

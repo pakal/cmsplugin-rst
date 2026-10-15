@@ -1,3 +1,4 @@
+import re
 import subprocess
 import sys
 
@@ -5,9 +6,12 @@ import pytest
 from django.contrib.staticfiles import finders
 
 from cmsplugin_rst.cms_plugins import restructuredtext
-from cmsplugin_rst.highlighting import get_pygments_css
+from cmsplugin_rst.highlighting import CSS_PROPERTIES, _get_long_classes, get_pygments_css
 
 pytest.importorskip("pygments")
+
+from pygments.styles import get_all_styles, get_style_by_name  # noqa: E402
+from pygments.token import STANDARD_TYPES  # noqa: E402
 
 CODE_BLOCK = """\
 .. code:: python
@@ -172,3 +176,47 @@ def test_bundled_stylesheet():
         css = f.read()
     assert css.startswith("/* Pygments style 'default', for docutils long token names */\n")
     assert "pre.code .keyword, code .keyword {" in css
+    assert css == get_pygments_css()  # up to date
+
+
+def _get_long_css_cascade_styles(css, classes):
+    """Return the CSS properties of an element with the given classes (among highlighted
+    tokens), by applying the matching token rules of `css` in the order of the CSS cascade."""
+    matching_rules = []
+    for index, line in enumerate(css.splitlines()):
+        match = re.match(r"pre\.code ((?:\.[\w-]+)+), code \1 \{ (.*); \}$", line)
+        if match and match.group(1) != ".ln":
+            rule_classes = set(match.group(1).strip(".").split("."))
+            if rule_classes <= set(classes):
+                matching_rules.append((len(rule_classes), index, match.group(2)))  # specificity, then order
+    properties = {}
+    for _, _, declarations in sorted(matching_rules):
+        properties.update(declaration.split(": ", 1) for declaration in declarations.split("; "))
+    return properties
+
+
+@pytest.mark.parametrize("style_name", sorted(get_all_styles()))
+def test_long_css_cascade(style_name):
+    # each token must get exactly its own properties, even though its element also matches the rules
+    # of its parent tokens, and of unrelated tokens with a subset of its classes (eg. "name variable class"
+    # matches ".name.class")
+    css = get_pygments_css(style_name)
+    style = get_style_by_name(style_name)
+    # the color of unstyled tokens is set on the container, and inherited by other tokens
+    match = re.search(r"^pre\.code \{ (?:.*; )?color: (#\w+)", css, re.MULTILINE)
+    container_color = match.group(1) if match else "inherit"
+    standard_classes = {frozenset(_get_long_classes(ttype)) for ttype in STANDARD_TYPES}
+    for ttype, ndef in style:
+        classes = _get_long_classes(ttype)
+        if not classes:
+            continue  # unstyled tokens are styled via their container
+        if ttype not in STANDARD_TYPES and frozenset(classes) in standard_classes:
+            continue  # eg. "Comment.PreProc" of gruvbox, which is not emitted by lexers, unlike "Comment.Preproc"
+        properties = _get_long_css_cascade_styles(css, classes)
+        for key, css_property, on_value, off_value in CSS_PROPERTIES:
+            value = ndef[key]
+            expected = (on_value % value if "%" in on_value else on_value) if value else off_value
+            actual = properties.get(css_property, off_value)
+            if css_property == "color":
+                expected, actual = [container_color if v == "inherit" else v for v in (expected, actual)]
+            assert actual == expected, (ttype, css_property)
