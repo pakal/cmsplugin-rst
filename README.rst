@@ -11,28 +11,28 @@ Supports python 3.10+, django-cms 3.11 to 5.x, and django 4.2 to 6.x.
 Installation
 ************
 
-Install ``cmsplugin_rst`` using pip or your favorite method, using a virtualenv or not.
+Install ``cmsplugin_rst`` using pip or your favorite method, using a virtualenv or not::
 
     $ pip install cmsplugin_rst
 
-To use postprocessors (see below), install the optional ``beautifulsoup4`` dependency too:
+To use postprocessors (see below), install the optional ``beautifulsoup4`` dependency too::
 
     $ pip install cmsplugin_rst[postprocessors]
 
-To get syntax highlighting of code blocks (see below), install the optional ``pygments`` dependency:
+To get syntax highlighting of code blocks (see below), install the optional ``pygments`` dependency::
 
     $ pip install cmsplugin_rst[highlighting]
 
 Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS``, in your django settings.
 
-And then migrate the DB:
+And then migrate the DB::
 
     $ python manage.py migrate
     
 Beware, if you upgrade from **cmsplugin_rst v0.1.1**, 
 which didn't use django migrations but South, 
 you may have to skip the initial migration (eg. if you get the 
-"OperationalError: table "cmsplugin_rst_rstpluginmodel" already exists" error):
+"OperationalError: table "cmsplugin_rst_rstpluginmodel" already exists" error)::
 
     $ python manage.py migrate --fake-initial cmsplugin_rst
 
@@ -195,13 +195,13 @@ can also be called directly to render restructuredtext from your own code (eg. v
 Tests
 *************
 
-The test suite uses pytest and pytest-django; run it against your current environment with:
+The test suite uses pytest and pytest-django; run it against your current environment with::
 
     $ pip install -e .[test]
     $ pytest
     $ pytest --cov    # with a coverage report
 
-Or against all supported python/django-cms/django combinations, with tox:
+Or against all supported python/django-cms/django combinations, with tox::
 
     $ pip install tox tox-uv
     $ tox p                         # all environments, in parallel
@@ -211,7 +211,7 @@ Some code paths are only exercised with specific django-cms versions, or with dj
 (see the ``-versioning`` tox environments).
 
 To test the plugin live, a demo django-cms project is included in the repository, as a git submodule
-(fetch it with ``git submodule update --init``). Run it with:
+(fetch it with ``git submodule update --init``). Run it with::
 
     $ python tests/manage.py                    # or "python tests/manage.py runserver 8765" for another port
 
