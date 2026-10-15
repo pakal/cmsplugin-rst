@@ -63,6 +63,7 @@ def test_long_css():
     css = get_pygments_css()
     assert css.startswith("/* Pygments style 'default', for docutils long token names */\n")
     assert "pre.code { background-color: #f8f8f8; }" in css
+    assert "code:has(> span) { background-color: #f8f8f8; }" in css
     assert "pre.code .keyword, code .keyword { color: #008000; font-weight: bold; }" in css
     # child tokens must reset the properties they don't inherit from parent tokens (eg. "nobold")
     assert "pre.code .keyword.pseudo, code .keyword.pseudo { font-weight: normal; }" in css
@@ -73,7 +74,15 @@ def test_long_css():
 
 def test_long_css_with_container_styles():
     css = get_pygments_css("monokai")
-    assert "pre.code, code { color: #f8f8f2; }" in css  # Token.Text is unstyled in docutils
+    # Token.Text is unstyled in docutils, so its color goes to containers, along with the background
+    assert "pre.code { background-color: #272822; color: #f8f8f2; }" in css
+    assert "code:has(> span) { background-color: #272822; color: #f8f8f2; }" in css
+    # plain inline code (without highlighted tokens) must not be styled
+    for line in css.splitlines()[1:]:  # skip header comment
+        selectors = line.split("{")[0]
+        for selector in selectors.split(","):
+            selector = selector.strip()
+            assert selector.startswith(("pre.code", "code:has(> span)", "code .")), selector
 
 
 def test_short_css():

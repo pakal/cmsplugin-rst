@@ -46,6 +46,9 @@ version 0.3 (unreleased)
   pages without visible content (eg. draft-only pages with djangocms-
   versioning) are ignored too, instead of producing links which 404 for
   visitors
+* Generated pygments stylesheets no longer apply the base text color of a
+  style to all <code> elements (which made inline code unreadable with dark
+  styles), and apply the style background to highlighted inline code too
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

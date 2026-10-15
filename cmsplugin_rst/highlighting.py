@@ -66,10 +66,10 @@ def get_pygments_css(style_name="default", tokennames="long"):
         raise ValueError("Unsupported tokennames value %r (must be 'long' or 'short')" % tokennames)
 
     style = get_style_by_name(style_name)
-    rules = ["/* Pygments style %r, for docutils long token names */" % style_name]
+    container_declarations = []
     if style.background_color:
-        rules.append("pre.code { background-color: %s; }" % style.background_color)
-    rules.append("%s { color: #999999; user-select: none; }" % _get_selector(" .ln"))  # line numbers
+        container_declarations.append("background-color: %s" % style.background_color)
+    token_rules = []
 
     for ttype, ndef in style:
         parent_ndef = style.style_for_token(ttype.parent) if ttype.parent is not None else {}
@@ -77,10 +77,21 @@ def get_pygments_css(style_name="default", tokennames="long"):
         if not declarations:
             continue
         classes = _get_long_classes(ttype)
-        # Tokens with all classes filtered out are styled via their container
-        suffix = (" ." + ".".join(classes)) if classes else ""
-        rules.append("%s { %s; }" % (_get_selector(suffix), "; ".join(declarations)))
+        if classes:
+            token_rules.append("%s { %s; }" % (_get_selector(" ." + ".".join(classes)), "; ".join(declarations)))
+        else:
+            # Unstyled tokens (eg. Token.Text) are styled via their container
+            container_declarations.extend(declarations)
 
+    rules = ["/* Pygments style %r, for docutils long token names */" % style_name]
+    if container_declarations:
+        container_declarations = "; ".join(container_declarations)
+        rules.append("pre.code { %s; }" % container_declarations)
+        # Only highlighted inline code (not all <code> elements) gets the style's background and base
+        # color, in a separate rule since browsers without :has() support would ignore the whole rule
+        rules.append("code:has(> span) { %s; }" % container_declarations)
+    rules.append("%s { color: #999999; user-select: none; }" % _get_selector(" .ln"))  # line numbers
+    rules.extend(token_rules)
     return "\n".join(rules) + "\n"
 
 

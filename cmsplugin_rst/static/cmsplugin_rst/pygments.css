@@ -1,5 +1,6 @@
 /* Pygments style 'default', for docutils long token names */
 pre.code { background-color: #f8f8f8; }
+code:has(> span) { background-color: #f8f8f8; }
 pre.code .ln, code .ln { color: #999999; user-select: none; }
 pre.code .whitespace, code .whitespace { color: #bbbbbb; }
 pre.code .comment, code .comment { color: #3D7B7B; font-style: italic; }
