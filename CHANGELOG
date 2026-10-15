@@ -1,4 +1,4 @@
-version 0.3 (unreleased)
+version 0.3 (2026-10-15)
 ========================
 
 * Support python 3.10 to 3.14, django-cms 3.11 to 5.1 and django 4.2 to 6.1;
@@ -11,6 +11,8 @@ version 0.3 (unreleased)
   django-cms; no DB schema change)
 * Stop using django and docutils APIs which are removed or deprecated
 * Add a pytest test suite and a tox configuration for all supported versions
+* Make the demo django-cms project of tests/manage.py work again, with a
+  temporary sqlite database and auto-created demo pages and superuser
 * Document syntax highlighting of code via the standard docutils "code"
   directive/role, add the optional "highlighting" extra (pygments), bundle
   a matching stylesheet (static file "cmsplugin_rst/pygments.css"), and add

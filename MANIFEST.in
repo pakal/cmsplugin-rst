@@ -4,3 +4,4 @@ include LICENSE
 include README.rst
 graft cmsplugin_rst
 global-exclude *.orig *.pyc *.log *.swp
+prune tests
