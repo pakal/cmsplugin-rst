@@ -180,10 +180,16 @@ Or against all supported python/django-cms/django combinations, with tox:
 Some code paths are only exercised with specific django-cms versions, or with djangocms-versioning
 (see the ``-versioning`` tox environments).
 
-A legacy demo project (targeting old django/django-cms versions) with a sqlite DB is included in repository with a sqlite DB is included in repository, 
-as a git submodule (https://git-scm.com/docs/git-submodule).
+To test the plugin live, a demo django-cms project is included in the repository, as a git submodule
+(fetch it with ``git submodule update --init``). Run it with:
 
-Its django admin credentials are test/test.
+    $ python tests/manage.py                    # or "python tests/manage.py runserver 8765" for another port
+
+This migrates a temporary sqlite database (its path is displayed, and can be set with the
+``DJANGO_TEST_DB_PATH`` environment variable; delete it to start from scratch), creates demo pages
+and a superuser with credentials admin/admin, then runs the development server on http://127.0.0.1:8000/.
+Its settings are in ``tests/test_settings.py``. Other django commands work as usual, eg.
+``python tests/manage.py createsuperuser``.
 
 
 .. _Django CMS: https://www.django-cms.org

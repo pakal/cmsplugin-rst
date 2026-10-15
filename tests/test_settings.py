@@ -1,10 +1,17 @@
+"""Settings of the demo project (see manage.py), based on the dummy django-cms project of the "test_project" submodule."""
 
+import os
 from textwrap import dedent
-from test_app.settings import *
 
-INSTALLED_APPS += ("cmsplugin_rst",)
+from test_app.settings import *  # noqa: F403
 
- 
+INSTALLED_APPS += ["cmsplugin_rst"]  # noqa: F405
+
+# Template with the stylesheet of syntax highlighting
+TEMPLATES[0]["DIRS"] = [os.path.join(os.path.dirname(os.path.abspath(__file__)), "demo_templates")]  # noqa: F405
+CMS_TEMPLATES = [("demo_page.html", "Demo page (with pygments.css)"), ("page.html", "Page")]
+
+
 ## DJANGO CMSPLUGIN RST CONF ##
 
 if not os.environ.get("CMSPLUGIN_RST_SKIP_CONF"):  # use this flag to test the zero-conf case
@@ -13,26 +20,21 @@ if not os.environ.get("CMSPLUGIN_RST_SKIP_CONF"):  # use this flag to test the z
 
     CMSPLUGIN_RST_CONTENT_PREFIX = dedent("""
 
-    .. |nbsp| unicode:: 0xA0 
+    .. |nbsp| unicode:: 0xA0
        :trim:
-    
+
     *Global Prefix: Start of Content*
 
     """)
 
-    CMSPLUGIN_RST_CONTENT_SUFFIX =  \
-    """*Global Suffix: End of Content*"""
+    CMSPLUGIN_RST_CONTENT_SUFFIX = """*Global Suffix: End of Content*"""
 
-
-    CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"initial_header_level": 2, # minimum "h2" when rendered to html
+    CMSPLUGIN_RST_SETTINGS_OVERRIDES = {"initial_header_level": 2,  # minimum "h2" when rendered to html
                                         "smart_quotes": "alt"}
-                                        #"'language_code': "fr"  # weirdly seems BROKEN!
 
-                             
     def add_stuffs_to_soup(soup):
         soup.div.append("""String Appended Via Beautifulsoup Postprocessor""")
 
     CMSPLUGIN_RST_POSTPROCESSORS = [
         "test_settings.add_stuffs_to_soup"
     ]
-
