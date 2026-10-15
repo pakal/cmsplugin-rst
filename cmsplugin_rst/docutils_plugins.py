@@ -21,6 +21,7 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
     :param content: The directive content for customization.
     """
     from cms.models import Page  # LAZY loading, else troubles on setup
+    from django.core.exceptions import FieldDoesNotExist
 
     result = re.match(r"^(.+) \<(.+)\>$", text)
     #print (">> djangocms_link_role regex result is", result, result.groups() if result else None)
@@ -31,9 +32,17 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
         reverse_id = text
 
     try:
-        # beware: draft and published versions of a page may have the same reverse-ID...
-        page_lookup = {'reverse_id': reverse_id,
-                       'publisher_is_draft': False}  
+        # beware: on django-cms<4, draft and published versions of a page share the same
+        # reverse-ID, so publisher_is_draft must disambiguate them. django-cms>=4 dropped
+        # that field entirely (draft/publish is now versioned PageContent, not separate
+        # Page rows), so only add it to the lookup when the installed cms still has it.
+        page_lookup = {'reverse_id': reverse_id}
+        try:
+            Page._meta.get_field('publisher_is_draft')
+        except FieldDoesNotExist:
+            pass
+        else:
+            page_lookup['publisher_is_draft'] = False
         page = Page.objects.all().get(**page_lookup)
     except Page.DoesNotExist:
         msg = inliner.reporter.error("Targeted reverse ID of published page doesn't exist: %r" % reverse_id, line=lineno)

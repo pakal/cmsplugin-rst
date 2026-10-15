@@ -1,4 +1,14 @@
 
+version 0.4
+=================
+
+* Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
+  removed upstream (draft/publish is now versioned PageContent, not separate
+  Page rows), which made the role crash with a FieldError on cms4+. The
+  publisher_is_draft filter is now only applied when the field still exists,
+  keeping the role working unchanged on django-cms<4.
+
+
 version 0.2
 =================
 
