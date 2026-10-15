@@ -41,6 +41,11 @@ version 0.3 (unreleased)
 * The "cmspage" role now only looks up pages of the current site, since
   reverse IDs are only unique per site; on multi-site installations, links
   to reverse IDs used on several sites always failed as "not unique"
+* The "cmspage" role no longer links to unpublished pages: on django-cms<4,
+  unpublished or expired public pages are ignored, and on django-cms>=4
+  pages without visible content (eg. draft-only pages with djangocms-
+  versioning) are ignored too, instead of producing links which 404 for
+  visitors
 * Fix "cmspage" docutils role for django-cms>=4: Page.publisher_is_draft was
   removed upstream (draft/publish is now versioned PageContent, not separate
   Page rows), which made the role crash with a FieldError on cms4+. The

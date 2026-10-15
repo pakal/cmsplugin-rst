@@ -103,7 +103,8 @@ that you'll have set previously in advanced page parameters:
    
    :cmspage:`My Link Name <My-Reverse-Id>`   // here the link name is embedded in role
 
-Reverse IDs must exist and be unique in the djangocms DB, else the rendering of the link fails.
+Targeted pages must be published (with djangocms-versioning, if installed, on django-cms>=4),
+and their reverse IDs must exist and be unique on the current site, else the rendering of the link fails.
 
    
 *******************

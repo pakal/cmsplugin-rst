@@ -1,5 +1,6 @@
 """Minimal django settings to run the pytest suite (see also test_settings.py for the demo project)."""
 
+import importlib.util
 import os
 
 import cms
@@ -32,6 +33,11 @@ INSTALLED_APPS = [
     "sekizai",
     "cmsplugin_rst",
 ]
+
+# Enabled when installed (see tox envs), since it changes the publication workflow of django-cms>=4
+USE_VERSIONING = importlib.util.find_spec("djangocms_versioning") is not None
+if USE_VERSIONING:
+    INSTALLED_APPS.append("djangocms_versioning")
 
 MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",

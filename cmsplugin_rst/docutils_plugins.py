@@ -59,6 +59,31 @@ def get_safe_writer_class(writer_class):
     return SafeWriter
 
 
+def _get_published_page(Page, reverse_id):
+    """Return the published page with this reverse-ID on the current site (reverse-IDs are only unique per site).
+
+    Raise Page.DoesNotExist or Page.MultipleObjectsReturned on failure.
+    """
+    from django.core.exceptions import FieldDoesNotExist
+
+    try:
+        Page._meta.get_field('publisher_is_draft')
+    except FieldDoesNotExist:
+        # django-cms>=4 has no separate draft/public Page rows anymore, and the default manager
+        # of PageContent only returns published contents when djangocms-versioning is installed,
+        # so a page without visible content (in the current language or its fallbacks) is unpublished.
+        from cms.models import EmptyPageContent
+
+        page = Page.objects.on_site().get(reverse_id=reverse_id)
+        if isinstance(page.get_content_obj(fallback=True), EmptyPageContent):
+            raise Page.DoesNotExist("Page %r has no published content" % reverse_id)
+        return page
+    else:
+        # on django-cms<4, draft and public versions of a page share the same reverse-ID,
+        # and public versions may be unpublished (or out of their publication dates).
+        return Page.objects.published().filter(publisher_is_draft=False).distinct().get(reverse_id=reverse_id)
+
+
 def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, content=None):
     """Role to link to a djangocms page, using its reverse-ID.
     Allows the syntax "Name <ref>" like for standard RST links.
@@ -76,7 +101,6 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
     :param content: The directive content for customization.
     """
     from cms.models import Page  # LAZY loading, else troubles on setup
-    from django.core.exceptions import FieldDoesNotExist
 
     result = re.match(r"^(.+) \<(.+)\>$", text)
     #print (">> djangocms_link_role regex result is", result, result.groups() if result else None)
@@ -87,19 +111,7 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, cont
         reverse_id = text
 
     try:
-        # beware: on django-cms<4, draft and published versions of a page share the same
-        # reverse-ID, so publisher_is_draft must disambiguate them. django-cms>=4 dropped
-        # that field entirely (draft/publish is now versioned PageContent, not separate
-        # Page rows), so only add it to the lookup when the installed cms still has it.
-        page_lookup = {'reverse_id': reverse_id}
-        try:
-            Page._meta.get_field('publisher_is_draft')
-        except FieldDoesNotExist:
-            pass
-        else:
-            page_lookup['publisher_is_draft'] = False
-        # reverse-IDs are only unique per site
-        page = Page.objects.on_site().get(**page_lookup)
+        page = _get_published_page(Page, reverse_id)
     except Page.DoesNotExist:
         msg = inliner.reporter.error("Targeted reverse ID of published page doesn't exist: %r" % reverse_id, line=lineno)
         prb = inliner.problematic(rawtext, rawtext, msg)
