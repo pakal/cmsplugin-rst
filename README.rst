@@ -4,6 +4,8 @@ cmsplugin_rst
 
 A plugin for `Django CMS`_, which renders restructured text into html, using docutils.
 
+Supports python 3.10+, django-cms 3.11 to 5.x, and django 4.2 to 6.x.
+
 
 ************
 Installation
@@ -12,6 +14,10 @@ Installation
 Install ``cmsplugin_rst`` using pip or your favorite method, using a virtualenv or not.
 
     $ pip install cmsplugin_rst
+
+To use postprocessors (see below), install the optional ``beautifulsoup4`` dependency too:
+
+    $ pip install cmsplugin_rst[postprocessors]
 
 Add ``'cmsplugin_rst'`` to your ``INSTALLED_APPS``, in your django settings.
 
@@ -56,7 +62,7 @@ CMSPLUGIN_RST_SETTINGS_OVERRIDES
     Amongst interesting settings are "initial_header_level" and "report_level".
 
 CMSPLUGIN_RST_POSTPROCESSORS
-    If and only if ``BeautifulSoup`` is installed, these postprocessors are applied 
+    If and only if ``beautifulsoup4`` is installed, these postprocessors are applied 
     to the rendered HTML before displaying it.
     It must be a list of qualified function names, eg. ["mymodule.mysubmodule.myfunction"].
     Each of these functions must expect a beautifulsoup tree as unique argument, 
@@ -91,10 +97,21 @@ Reverse IDs must exist and be unique in the djangocms DB, else the rendering of 
 
    
 *************
-Test Project
+Tests
 *************
 
-A demo project with a sqlite DB is included in repository, 
+The test suite uses pytest and pytest-django; run it against your current environment with:
+
+    $ pip install -e .[test]
+    $ pytest
+
+Or against all supported python/django-cms/django combinations, with tox:
+
+    $ pip install tox tox-uv
+    $ tox p                         # all environments, in parallel
+    $ tox -e py313-cms50-dj52       # a single environment
+
+A legacy demo project (targeting old django/django-cms versions) with a sqlite DB is included in repository with a sqlite DB is included in repository, 
 as a git submodule (https://git-scm.com/docs/git-submodule).
 
 Its django admin credentials are test/test.
