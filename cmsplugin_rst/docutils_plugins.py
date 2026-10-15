@@ -1,10 +1,10 @@
 
 import re
 from docutils import nodes, utils
-from docutils.parsers.rst.roles import set_classes, register_local_role
+from docutils.parsers.rst.roles import register_local_role
 
 
-def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
+def djangocms_link_role(name, rawtext, text, lineno, inliner, options=None, content=None):
     """Role to link to a djangocms page, using its reverse-ID.
     Allows the syntax "Name <ref>" like for standard RST links.
 
@@ -57,7 +57,9 @@ def djangocms_link_role(name, rawtext, text, lineno, inliner, options={}, conten
         if name is None:
             name = page.get_menu_title()
         ref = page.get_absolute_url()
-        set_classes(options)
+        options = dict(options or {})
+        if 'class' in options:  # like docutils' set_classes(), deprecated since 0.22
+            options['classes'] = options.pop('class')
         node = nodes.reference(rawtext, name, refuri=ref,
                                **options)
         return [node], []

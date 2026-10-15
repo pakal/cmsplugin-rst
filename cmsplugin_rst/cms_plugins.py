@@ -28,6 +28,7 @@ DOCUTILS_RENDERER_SETTINGS.update(get_cfg("SETTINGS_OVERRIDES", {}))
 def restructuredtext(value, header_level=None, report_level=None):
     try:
         from docutils.core import publish_parts
+        from docutils.writers import get_writer_class
     except ImportError:
         if settings.DEBUG:
             raise template.TemplateSyntaxError("Error in 'restructuredtext' filter: The Python docutils library isn't installed.")
@@ -39,7 +40,7 @@ def restructuredtext(value, header_level=None, report_level=None):
         if report_level is not None:  # starts from 1 too
             settings_overrides["report_level"] = report_level
         parts = publish_parts(source=force_str(value), 
-                              writer_name=get_cfg("WRITER_NAME", "html4css1"), 
+                              writer=get_writer_class(get_cfg("WRITER_NAME", "html4css1"))(),
                               settings_overrides=settings_overrides)
         return force_str(parts["html_body"])
 
