@@ -22,6 +22,20 @@ def test_plugin_render_with_header_level_0():
     assert "<h1>Title</h1>" in context["content"]
 
 
+@pytest.mark.parametrize("plugin_language, context, is_french", [
+    ("fr", {"lang": "en", "LANGUAGE_CODE": "en"}, True),
+    ("en", {"lang": "fr", "LANGUAGE_CODE": "fr"}, False),
+    ("", {"lang": "fr-ca", "LANGUAGE_CODE": "en"}, True),
+    ("", {"LANGUAGE_CODE": "fr"}, True),
+    ("", {"LANGUAGE_CODE": "en"}, False),
+])
+def test_plugin_render_french_typography(plugin_language, context, is_french):
+    # the plugin's own language prevails, since django-cms may display fallback-language content
+    instance = RstPluginModel(name="test", body="Bonjour !", language=plugin_language)
+    content = RstPlugin().render(context, instance, None)["content"]
+    assert ("&thinsp;" in content) == is_french
+
+
 def test_plugin_form():
     form = RstPluginForm(data={"name": "x", "header_level": "", "body": "hello"})
     assert form.is_valid(), form.errors

@@ -64,8 +64,9 @@ class RstPlugin(CMSPluginBase):
     form = RstPluginForm
 
     def render(self, context, instance, placeholder):
-        # we lookup cms page language, else i18n language
-        language_code = context.get("lang", "") or context.get("LANGUAGE_CODE", "")
+        # we lookup the plugin's own language (which differs from the page language when
+        # django-cms displays fallback-language content), else cms page language, else i18n language
+        language_code = instance.language or context.get("lang", "") or context.get("LANGUAGE_CODE", "")
         content = render_rich_text(instance.body, 
                                    language_code=language_code, 
                                    header_level=instance.header_level,

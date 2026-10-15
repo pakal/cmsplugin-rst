@@ -36,6 +36,9 @@ version 0.3 (unreleased)
 * french_insecable() no longer alters the content of code-like html elements
   (pre, code, tt, kbd, samp, var, script, style, textarea), which broke code
   copied from french pages
+* French typography rules now depend on the language of the plugin itself,
+  instead of the language of the request, so that they are applied (only)
+  to french content when django-cms displays fallback-language content
 * Remove a debug print() of the "cmspage" role, which polluted the server
   output on each rendering of a duplicated reverse ID
 * The "cmspage" role now only looks up pages of the current site, since
