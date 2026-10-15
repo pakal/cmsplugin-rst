@@ -3,7 +3,7 @@ import re
 from importlib import import_module
 
 try:
-    from BeautifulSoup import BeautifulSoup
+    from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = None
 from django.conf import settings
@@ -28,7 +28,7 @@ def postprocess(html):
     if BeautifulSoup:
         postprocessors = get_postprocessors()
         if postprocessors:
-            soup = BeautifulSoup(html)
+            soup = BeautifulSoup(html, "html.parser")
             for postprocessor in postprocessors:
                 postprocessor(soup)
             return str(soup)  # NO prettify(), breaks spacing of tags
@@ -43,25 +43,25 @@ def french_insecable(text):
     This conform with the french typographic rules.
 
     >>> french_insecable('Foo !')
-    u'Foo<span style="white-space:nowrap">&thinsp;</span>!'
+    'Foo<span style="white-space:nowrap">&thinsp;</span>!'
 
     >>> french_insecable('Foo ?')
-    u'Foo<span style="white-space:nowrap">&thinsp;</span>?'
+    'Foo<span style="white-space:nowrap">&thinsp;</span>?'
 
     >>> french_insecable('Foo : bar')
-    u'Foo<span style="white-space:nowrap">&thinsp;</span>: bar'
+    'Foo<span style="white-space:nowrap">&thinsp;</span>: bar'
 
     >>> french_insecable('Foo ; bar')
-    u'Foo<span style="white-space:nowrap">&thinsp;</span>; bar'
+    'Foo<span style="white-space:nowrap">&thinsp;</span>; bar'
 
-    >>> french_insecable(u'\xab bar \xbb')
-    u'\\xab<span style="white-space:nowrap">&thinsp;</span>bar<span style="white-space:nowrap">&thinsp;</span>\\xbb'
+    >>> french_insecable('\xab bar \xbb')
+    '\xab<span style="white-space:nowrap">&thinsp;</span>bar<span style="white-space:nowrap">&thinsp;</span>\xbb'
 
     >>> french_insecable('123 456')
-    u'123<span style="white-space:nowrap">&thinsp;</span>456'
+    '123<span style="white-space:nowrap">&thinsp;</span>456'
 
     >>> french_insecable('123 %')
-    u'123<span style="white-space:nowrap">&thinsp;</span>%'
+    '123<span style="white-space:nowrap">&thinsp;</span>%'
 
     Space inside attributes should be preserved :
 
@@ -69,7 +69,7 @@ def french_insecable(text):
     '<a title="foo !">'
     """
 
-    tag_pattern = '</?\w+((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)/?>'
+    tag_pattern = r'</?\w+((\s+\w+(\s*=\s*(?:".*?"|\'.*?\'|[^\'">\s]+))?)+\s*|\s*)/?>'
     intra_tag_finder = re.compile(r'(?P<prefix>(%s)?)(?P<text>([^<]*))(?P<suffix>(%s)?)' % (tag_pattern, tag_pattern))
 
     nnbsp = '<span style="white-space:nowrap">&thinsp;</span>'

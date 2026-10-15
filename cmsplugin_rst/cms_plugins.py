@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 from cmsplugin_rst.forms import RstPluginForm
 from cmsplugin_rst.models import RstPluginModel
 from cmsplugin_rst.utils import postprocess
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from django.utils.encoding import force_text, force_bytes
+from django.utils.encoding import force_str
 from django.utils.safestring import mark_safe
 from django import template
 
@@ -32,17 +31,17 @@ def restructuredtext(value, header_level=None, report_level=None):
     except ImportError:
         if settings.DEBUG:
             raise template.TemplateSyntaxError("Error in 'restructuredtext' filter: The Python docutils library isn't installed.")
-        return force_text(value)
+        return force_str(value)
     else:
         settings_overrides = DOCUTILS_RENDERER_SETTINGS.copy()
         if header_level is not None:  # starts from 1
             settings_overrides["initial_header_level"] = header_level
         if report_level is not None:  # starts from 1 too
             settings_overrides["report_level"] = report_level
-        parts = publish_parts(source=force_bytes(value), 
+        parts = publish_parts(source=force_str(value), 
                               writer_name=get_cfg("WRITER_NAME", "html4css1"), 
                               settings_overrides=settings_overrides)
-        return force_text(parts["html_body"])
+        return force_str(parts["html_body"])
 
 
 def render_rich_text(rst_string, language_code="", header_level=None, report_level=None):

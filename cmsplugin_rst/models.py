@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cms.models.pluginmodel import CMSPlugin
 from django.db import models
 
@@ -15,5 +14,5 @@ class RstPluginModel(CMSPlugin):
                              help_text="If >0, specifies at which level the headings start.")
     body = models.TextField(help_text=rst_help_text)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
